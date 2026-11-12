@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         clash: ['"Clash Grotesk"', 'Arial', 'sans-serif'],
+        raleway: ['Raleway', 'Arial', 'sans-serif'],
       },
     },
   },
