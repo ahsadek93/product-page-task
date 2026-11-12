@@ -1,5 +1,6 @@
 import Breadcrumb from '../../../../../shared/components/breadcrumb/Breadcrumb';
 import ProductDetails from '../../../../../features/product/components/product-details/ProductDetails';
+import RelatedProducts from '../../../../../features/product/components/related-products/RelatedProducts';
 
 function ProductPage() {
   // ponytail: sample labels until product data is wired in; middle crumbs are text, no category/collection pages exist
@@ -15,6 +16,9 @@ function ProductPage() {
       />
       <div className="mt-6 lg:mt-10">
         <ProductDetails />
+      </div>
+      <div className="mt-16 lg:mt-24">
+        <RelatedProducts />
       </div>
     </div>
   );
