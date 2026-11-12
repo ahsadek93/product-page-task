@@ -1,17 +1,14 @@
-import { useParams } from 'react-router';
 import Breadcrumb from '../../../../../shared/components/breadcrumb/Breadcrumb';
 
 function ProductPage() {
-  const { categorySlug, collectionSlug } = useParams();
-
-  // ponytail: sample labels until product data is wired in
+  // ponytail: sample labels until product data is wired in; middle crumbs are text, no category/collection pages exist
   return (
     <div className="mx-auto max-w-[1240px] px-5 py-6">
       <Breadcrumb
         items={[
           { label: 'Homepage', to: '/' },
-          { label: 'Women', to: `/shop/${categorySlug}` },
-          { label: "Women's Shirts & Tops", to: `/shop/${categorySlug}/${collectionSlug}` },
+          { label: 'Women' },
+          { label: "Women's Shirts & Tops" },
           { label: 'Long Sleeve Overshirt, Khaki, 6' },
         ]}
       />

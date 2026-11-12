@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Link } from 'react-router';
 import arrowRight from './arrow-right.svg';
 
@@ -16,27 +15,18 @@ function Breadcrumb({ items }: BreadcrumbProps) {
   return (
     <nav aria-label="Breadcrumb" className="font-clash font-medium leading-[1.6]">
       <ol className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-        {items.map((item, i) => {
-          const isLast = i === items.length - 1;
-          return (
-            <Fragment key={`${item.label}-${i}`}>
-              {isLast ? (
-                <li aria-current="page" className="basis-full text-sm text-[#292929] lg:basis-auto lg:text-base">
-                  {item.label}
-                </li>
-              ) : (
-                <>
-                  <li className="text-[13px] text-[#8f8f8f] lg:text-base">
-                    {item.to ? <Link to={item.to}>{item.label}</Link> : item.label}
-                  </li>
-                  <li aria-hidden="true">
-                    <img src={arrowRight} alt="" width={12} height={12} />
-                  </li>
-                </>
-              )}
-            </Fragment>
-          );
-        })}
+        {items.map((item, i) =>
+          i === items.length - 1 ? (
+            <li key={i} aria-current="page" className="basis-full text-sm text-[#292929] lg:basis-auto lg:text-base">
+              {item.label}
+            </li>
+          ) : (
+            <li key={i} className="flex items-center gap-2 text-[13px] text-[#8f8f8f] lg:text-base">
+              {item.to ? <Link to={item.to}>{item.label}</Link> : item.label}
+              <img src={arrowRight} alt="" aria-hidden="true" width={12} height={12} />
+            </li>
+          ),
+        )}
       </ol>
     </nav>
   );
