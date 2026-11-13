@@ -4,5 +4,5 @@ import { toProduct } from './product.adapter';
 
 const STORE_SLUG = 'clear-theme';
 
-export const getProduct = (slug: string) =>
-  api<ProductDto>(`/products/slug/${STORE_SLUG}/${encodeURIComponent(slug)}?join=reviews`).then(toProduct);
+export const getProduct = (slug: string, signal?: AbortSignal) =>
+  api<ProductDto>(`/products/slug/${STORE_SLUG}/${encodeURIComponent(slug)}?join=reviews`, { signal }).then(toProduct);

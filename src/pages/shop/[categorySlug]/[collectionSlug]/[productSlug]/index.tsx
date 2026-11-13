@@ -14,7 +14,9 @@ const Divider = () => <img src={dashedLine} alt="" className="my-14 block h-[0.5
 
 function ProductPage() {
   const { categorySlug = '', collectionSlug = '', productSlug = '' } = useParams();
-  const { data: product, isPending, isError } = useProduct(productSlug);
+  const { data: product, isPending, isError, isFetching, errorUpdateCount, refetch } = useProduct(productSlug);
+  // A refetch of a query that never had data goes back to 'pending'; keep the error screen up while retrying.
+  const failed = isError || (isPending && errorUpdateCount > 0);
   const crumbs = useProductBreadcrumb(categorySlug, collectionSlug, product);
 
   // Middle crumbs are text: no category/collection pages exist yet.
@@ -35,10 +37,10 @@ function ProductPage() {
         ]}
       />
       <div className="mt-6 lg:mt-10">
-        {isPending ? (
+        {failed ? (
+          <ProductError onRetry={() => refetch()} retrying={isFetching} />
+        ) : isPending ? (
           <ProductDetailsSkeleton />
-        ) : isError ? (
-          <ProductError />
         ) : (
           <ProductDetails key={product.id} product={product} />
         )}
