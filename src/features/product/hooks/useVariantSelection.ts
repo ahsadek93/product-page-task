@@ -6,15 +6,22 @@ import { defaultSelection, findVariant, isAvailable, nextSelection, priceOf, sto
 export function useVariantSelection(product: Product) {
   const [selection, setSelection] = useState(() => defaultSelection(product));
   const variant = findVariant(product.variants, selection);
-  const { add } = useCartStore.getState(); // actions are stable; no subscription needed
+  const { add, setOpen } = useCartStore.getState(); // actions are stable; no subscription needed
+  const stock = stockOf(product, variant);
+  const addToCart = () => add(toCartItem(product, selection, variant)); // header badge pop is the feedback
 
   return {
-    addToCart: () => add(toCartItem(product, selection, variant)), // header badge pop is the feedback
+    canAddToCart: (product.variants.length === 0 || variant !== undefined) && stock?.canOrder !== false,
+    addToCart,
+    checkoutNow: () => {
+      addToCart();
+      setOpen(true);
+    },
     selection,
     select: (name: string, value: string) => setSelection((s) => nextSelection(product, s, name, value)),
     isAvailable: (name: string, value: string) => isAvailable(product, selection, name, value),
     variant, // undefined = combination doesn't exist
-    stock: stockOf(product, variant),
+    stock,
     ...priceOf(product, variant),
   };
 }

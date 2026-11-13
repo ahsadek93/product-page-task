@@ -15,7 +15,7 @@ type ProductInfoProps = {
 // ponytail: fixed low-stock threshold; make it a store setting if merchants need to tune it
 const LOW_STOCK = 5;
 
-function ProductInfo({ product, selection: { selection, select, isAvailable, variant, stock, price, salePrice, addToCart } }: ProductInfoProps) {
+function ProductInfo({ product, selection: { selection, select, isAvailable, stock, price, salePrice, canAddToCart, addToCart, checkoutNow } }: ProductInfoProps) {
   return (
     <div className="flex flex-col gap-[38px] font-clash lg:w-[520px] lg:shrink-0">
       <div className="flex flex-col gap-12 lg:gap-14">
@@ -145,7 +145,7 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
         <div className="flex flex-col items-start gap-[18px] text-lg leading-[1.2] lg:flex-row lg:gap-6 lg:text-xl">
           <button
             type="button"
-            disabled={(product.variants.length > 0 && !variant) || stock?.canOrder === false}
+            disabled={!canAddToCart}
             onClick={addToCart}
             className="w-[296px] rounded-md bg-[#141414] py-[17px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg"
           >
@@ -153,7 +153,9 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
           </button>
           <button
             type="button"
-            className="rounded-md border border-[#b8b8b8] bg-white px-[35px] py-[17px] font-medium text-[#333] lg:h-[58px] lg:w-[200px] lg:rounded-lg lg:px-0"
+            disabled={!canAddToCart}
+            onClick={checkoutNow}
+            className="rounded-md border border-[#b8b8b8] bg-white px-[35px] py-[17px] font-medium text-[#333] disabled:cursor-not-allowed disabled:opacity-40 lg:h-[58px] lg:w-[200px] lg:rounded-lg lg:px-0"
           >
             Checkout Now
           </button>
