@@ -18,6 +18,23 @@ type CartState = {
 // ponytail: stock cap is the snapshot from add time; re-check against the API at checkout
 const clamp = (item: CartItem, quantity: number) => Math.min(quantity, item.maxQuantity ?? Infinity);
 
+// localStorage is outside our control: a malformed line (e.g. no `options`) would crash the header or CartLine.
+const isCartItem = (v: unknown): v is CartItem => {
+  if (typeof v !== 'object' || v === null) return false;
+  const i = v as Record<string, unknown>;
+  return (
+    typeof i.variantId === 'string' &&
+    typeof i.name === 'string' &&
+    typeof i.image === 'string' &&
+    Number.isFinite(i.price) &&
+    Number.isInteger(i.quantity) &&
+    (i.quantity as number) > 0 &&
+    typeof i.options === 'object' &&
+    i.options !== null &&
+    (i.maxQuantity === null || Number.isFinite(i.maxQuantity))
+  );
+};
+
 export const useCartStore = create<CartState>()(
   persist(
     immer((set) => ({
@@ -46,9 +63,22 @@ export const useCartStore = create<CartState>()(
       clear: () => set({ items: [] }),
       setOpen: (isOpen) => set({ isOpen }),
     })),
-    { name: 'cart', partialize: (s) => ({ items: s.items }) },
+    {
+      name: 'cart',
+      partialize: (s) => ({ items: s.items }),
+      // Also runs with `persisted === undefined` when nothing is stored.
+      merge: (persisted, current) => {
+        const items = (persisted as { items?: unknown } | undefined)?.items;
+        return { ...current, items: Array.isArray(items) ? items.filter(isCartItem) : [] };
+      },
+    },
   ),
 );
+
+// Another tab changed the cart: reload it, so this tab's next write doesn't overwrite it with stale items.
+window.addEventListener('storage', (e) => {
+  if (e.key === 'cart' || e.key === null) void useCartStore.persist.rehydrate(); // null = storage cleared
+});
 
 export const cartCount = (items: CartItem[]) => items.reduce((n, i) => n + i.quantity, 0);
 export const cartSubtotal = (items: CartItem[]) => items.reduce((sum, i) => sum + i.price * i.quantity, 0);

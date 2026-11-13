@@ -10,7 +10,10 @@ const localStorage = {
   setItem: (k: string, v: string) => void saved.set(k, v),
   removeItem: (k: string) => void saved.delete(k),
 };
-Object.assign(globalThis, { window: { localStorage } });
+// The store listens for `storage` events from other tabs; capture the callback to fire it by hand.
+let onStorage: (e: { key: string | null }) => void = () => {};
+const addEventListener = (type: string, cb: typeof onStorage) => void (type === 'storage' && (onStorage = cb));
+Object.assign(globalThis, { window: { localStorage, addEventListener } });
 const { cartCount, cartSubtotal, useCartStore } = await import('./cart.store.ts');
 
 const item = (variantId: string, quantity = 1, price = 100, maxQuantity: number | null = null): CartItem => ({
@@ -151,6 +154,25 @@ describe('persistence', () => {
     saved.set('cart', JSON.stringify({ state: { items: [item('a', 2)] }, version: 0 }));
     await useCartStore.persist.rehydrate();
     assert.deepEqual(lines(), [['a', 2]]);
+  });
+
+  it('rehydrates a saved null items to an empty cart', async () => {
+    saved.set('cart', JSON.stringify({ state: { items: null }, version: 0 }));
+    await useCartStore.persist.rehydrate();
+    assert.deepEqual(cart().items, []);
+  });
+
+  it('drops malformed saved lines and keeps the valid ones', async () => {
+    const junk = ['x', { ...item('b'), options: undefined }, item('c', 0)];
+    saved.set('cart', JSON.stringify({ state: { items: [item('a', 2), ...junk] }, version: 0 }));
+    await useCartStore.persist.rehydrate();
+    assert.deepEqual(lines(), [['a', 2]]);
+  });
+
+  it('reloads the cart when another tab changes it', () => {
+    saved.set('cart', JSON.stringify({ state: { items: [item('a', 3)] }, version: 0 }));
+    onStorage({ key: 'cart' }); // localStorage is sync, so rehydrate finishes before this returns
+    assert.deepEqual(lines(), [['a', 3]]);
   });
 });
 
