@@ -8,6 +8,7 @@ const DURATION = 4000;
 function CartToast() {
   const { lastAdded, isOpen, setOpen } = useCart();
   const [visible, setVisible] = useState(false);
+  const [shownId, setShownId] = useState(lastAdded?.id);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const hideLater = () => {
@@ -16,12 +17,18 @@ function CartToast() {
   };
   const pause = () => clearTimeout(timer.current);
 
-  useEffect(() => {
-    if (!lastAdded) return;
+  // A new add (new id) shows the toast — adjusted during render, not in an effect.
+  if (lastAdded && lastAdded.id !== shownId) {
+    setShownId(lastAdded.id);
     setVisible(true);
-    hideLater();
-    return pause;
-  }, [lastAdded?.id]);
+  }
+
+  // Each shown toast gets a fresh auto-dismiss timer.
+  useEffect(() => {
+    if (!visible) return;
+    timer.current = setTimeout(() => setVisible(false), DURATION);
+    return () => clearTimeout(timer.current);
+  }, [visible, shownId]);
 
   // Drawer opening (Checkout Now, View Cart) dismisses it for good, so it doesn't pop back when the drawer closes.
   if (isOpen && visible) setVisible(false);
@@ -31,7 +38,11 @@ function CartToast() {
 
   return (
     // Live region stays mounted so screen readers announce each add.
-    <div role="status" aria-live="polite" className="pointer-events-none fixed inset-x-4 bottom-4 z-40 flex justify-center font-clash lg:inset-x-auto lg:bottom-6 lg:right-6">
+    <div
+      role="status"
+      aria-live="polite"
+      className="pointer-events-none fixed inset-x-4 bottom-4 z-40 flex justify-center font-clash lg:inset-x-auto lg:bottom-6 lg:right-6"
+    >
       <Transition show={visible && !!item}>
         <div
           onMouseEnter={pause}
@@ -43,7 +54,17 @@ function CartToast() {
           <img src={item?.image} alt="" className="size-12 shrink-0 rounded-md bg-[#2a2a2a] object-cover" />
           <div className="flex min-w-0 flex-1 flex-col gap-1 leading-[1.2]">
             <p className="flex items-center gap-1.5 text-base font-semibold">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#12b76a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="#12b76a"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
                 <path d="M3 8.5l3 3 7-7" />
               </svg>
               Added to cart
