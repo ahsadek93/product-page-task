@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Transition } from '@headlessui/react';
-import { useCart } from '@/features/cart/hooks/useCart';
+import { useCartToast } from '@/features/cart/hooks/useCartToast';
 
 const DURATION = 4000;
 
 // Shows after every add; hover/focus pauses the auto-dismiss.
 function CartToast() {
-  const { lastAdded, isOpen, setOpen } = useCart();
+  const { lastAdded, isOpen, setOpen } = useCartToast();
   const [visible, setVisible] = useState(false);
   const [shownId, setShownId] = useState(lastAdded?.id);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
