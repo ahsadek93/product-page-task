@@ -28,4 +28,7 @@ export type Product = {
   options: ProductOption[];
   variants: ProductVariant[];
   categories: Category[];
+  quantity: number; // stock when the product has no variants
+  trackStock: boolean; // false = quantities are meaningless, always orderable
+  blockOrdersWhenOutOfStock: boolean;
 };

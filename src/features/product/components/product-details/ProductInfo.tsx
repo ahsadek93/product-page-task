@@ -11,7 +11,10 @@ type ProductInfoProps = {
   selection: VariantSelection;
 };
 
-function ProductInfo({ product, selection: { selection, select, isAvailable, variant, price, salePrice } }: ProductInfoProps) {
+// ponytail: fixed low-stock threshold; make it a store setting if merchants need to tune it
+const LOW_STOCK = 5;
+
+function ProductInfo({ product, selection: { selection, select, isAvailable, variant, stock, price, salePrice } }: ProductInfoProps) {
   // BE description is merchant HTML: sanitize before injecting
   const description = DOMPurify.sanitize(product.descriptionHtml);
 
@@ -115,6 +118,27 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
                 </div>
               );
             })}
+
+            {/* Stock: hidden when the store doesn't track it */}
+            {stock && (
+              <p role="status" className="flex items-center gap-2 text-base font-medium leading-[1.2] lg:text-lg">
+                <span
+                  aria-hidden="true"
+                  className={`size-2 rounded-full ${
+                    stock.quantity === 0 ? 'bg-[#d92d20]' : stock.quantity <= LOW_STOCK ? 'bg-[#f79009]' : 'bg-[#12b76a]'
+                  }`}
+                />
+                <span className="text-[#292929]">
+                  {stock.quantity === 0
+                    ? stock.canOrder
+                      ? 'Out of stock, available to order'
+                      : 'Out of stock'
+                    : stock.quantity <= LOW_STOCK
+                      ? `Only ${stock.quantity} left`
+                      : 'In stock'}
+                </span>
+              </p>
+            )}
           </div>
         </div>
 
@@ -122,7 +146,7 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
         <div className="flex flex-col items-start gap-[18px] text-lg leading-[1.2] lg:flex-row lg:gap-6 lg:text-xl">
           <button
             type="button"
-            disabled={product.variants.length > 0 && !variant}
+            disabled={(product.variants.length > 0 && !variant) || stock?.canOrder === false}
             className="w-[296px] rounded-md bg-[#141414] py-[17px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg"
           >
             Add To Cart

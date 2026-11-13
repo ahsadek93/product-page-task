@@ -43,5 +43,8 @@ export function toProduct(dto: ProductDto): Product {
       options: Object.fromEntries((v.variation_props ?? []).map((p) => [p.variation, p.variation_prop])),
     })),
     categories: (dto.categories ?? []).map(({ id, name, slug }) => ({ id, name, slug })),
+    quantity: dto.quantity ?? 0,
+    trackStock: dto.track_stock === true,
+    blockOrdersWhenOutOfStock: dto.disable_orders_for_no_stock === true,
   };
 }

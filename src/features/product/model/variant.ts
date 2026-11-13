@@ -29,6 +29,13 @@ export const defaultSelection = (product: Product): Selection =>
   product.variants[0]?.options ??
   Object.fromEntries(product.options.flatMap((o) => (o.values[0] ? [[o.name, o.values[0].name]] : [])));
 
+// null = store doesn't track stock, show nothing. Variant quantity wins; product quantity when there are no variants.
+export const stockOf = (product: Product, variant?: ProductVariant) => {
+  if (!product.trackStock) return null;
+  const quantity = product.variants.length ? (variant?.quantity ?? 0) : product.quantity;
+  return { quantity, canOrder: quantity > 0 || !product.blockOrdersWhenOutOfStock };
+};
+
 // Variant fields override the product's; 0/null on the variant means "not set" (the sample BE data
 // has variants at 190 with no sale while the product says 160 on sale — product sale must still apply).
 export const priceOf = (product: Product, variant?: ProductVariant) => {

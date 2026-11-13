@@ -2,7 +2,7 @@
 // Run: node src/features/product/model/variant.test.ts
 import assert from 'node:assert/strict';
 import type { Product, ProductVariant } from '@/features/product/types/product';
-import { defaultSelection, findVariant, isAvailable, nextSelection, priceOf } from './variant.ts';
+import { defaultSelection, findVariant, isAvailable, nextSelection, priceOf, stockOf } from './variant.ts';
 
 const v = (id: string, options: Record<string, string>, price = 100, salePrice: number | null = null): ProductVariant =>
   ({ id, price, salePrice, quantity: 1, options });
@@ -44,5 +44,14 @@ assert.equal(isAvailable(ghost, brown38, 'color', 'black'), false); // color wit
 // nextSelection: valid pick kept; pick that breaks a later option moves it to a fitting variant
 assert.deepEqual(nextSelection(trap, brown38, 'size', '38'), brown38);
 assert.deepEqual(nextSelection(trap, brown38, 'color', 'black'), { color: 'black', size: '40' });
+
+// stockOf: untracked → null; variant qty wins; blocking only when the store says so
+const tracked = (over: Partial<Product> = {}) => product({ trackStock: true, blockOrdersWhenOutOfStock: true, quantity: 7, ...over });
+assert.equal(stockOf(product({ trackStock: false }), v('x', {})), null);
+assert.deepEqual(stockOf(tracked(), { ...v('x', {}), quantity: 3 }), { quantity: 3, canOrder: true });
+assert.deepEqual(stockOf(tracked(), { ...v('x', {}), quantity: 0 }), { quantity: 0, canOrder: false });
+assert.deepEqual(stockOf(tracked({ blockOrdersWhenOutOfStock: false }), { ...v('x', {}), quantity: 0 }), { quantity: 0, canOrder: true });
+assert.deepEqual(stockOf(tracked({ variants: [] })), { quantity: 7, canOrder: true }); // no variants → product qty
+assert.deepEqual(stockOf(tracked()), { quantity: 0, canOrder: false }); // has variants but none matched
 
 console.log('variant ok');
