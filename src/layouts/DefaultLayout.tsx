@@ -3,6 +3,7 @@ import AnnouncementBar from './announcement-bar/AnnouncementBar';
 import AppHeader from './header/AppHeader';
 import AppFooter from './footer/AppFooter';
 import CartDrawer from '@/features/cart/components/cart-drawer/CartDrawer';
+import CartToast from '@/features/cart/components/cart-toast/CartToast';
 
 function DefaultLayout() {
   return (
@@ -14,6 +15,7 @@ function DefaultLayout() {
       </main>
       <AppFooter />
       <CartDrawer />
+      <CartToast />
     </div>
   );
 }

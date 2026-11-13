@@ -6,6 +6,7 @@ import type { CartItem } from '@/features/cart/types/cart';
 type CartState = {
   items: CartItem[];
   isOpen: boolean; // drawer; not persisted
+  lastAdded: { item: CartItem; id: number } | null; // drives the "added" toast; id changes on every add
   add: (item: CartItem) => void;
   setQuantity: (variantId: string, quantity: number) => void;
   remove: (variantId: string) => void;
@@ -21,12 +22,14 @@ export const useCartStore = create<CartState>()(
     immer((set) => ({
       items: [],
       isOpen: false,
+      lastAdded: null,
       // Same variant again → bump quantity instead of a second line.
       add: (item) =>
         set((s) => {
           const line = s.items.find((i) => i.variantId === item.variantId);
           if (line) line.quantity = clamp(line, line.quantity + item.quantity);
           else s.items.push({ ...item, quantity: clamp(item, item.quantity) });
+          s.lastAdded = { item, id: (s.lastAdded?.id ?? 0) + 1 };
         }),
       setQuantity: (variantId, quantity) =>
         set((s) => {

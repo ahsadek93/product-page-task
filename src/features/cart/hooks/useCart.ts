@@ -3,8 +3,8 @@ import { cartCount, cartSubtotal, useCartStore } from '@/features/cart/model/car
 
 export function useCart() {
   const { items, ...rest } = useCartStore(
-    useShallow(({ items, isOpen, add, setQuantity, remove, clear, setOpen }) => ({
-      items, isOpen, add, setQuantity, remove, clear, setOpen,
+    useShallow(({ items, isOpen, lastAdded, add, setQuantity, remove, clear, setOpen }) => ({
+      items, isOpen, lastAdded, add, setQuantity, remove, clear, setOpen,
     })),
   );
   return { items, count: cartCount(items), subtotal: cartSubtotal(items), ...rest };

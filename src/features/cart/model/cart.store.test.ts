@@ -15,6 +15,7 @@ cart().add(item('b', 1, 50));
 assert.deepEqual(cart().items.map((i) => [i.variantId, i.quantity]), [['a', 3], ['b', 1]]);
 assert.equal(cartCount(cart().items), 4);
 assert.equal(cartSubtotal(cart().items), 350);
+assert.deepEqual([cart().lastAdded?.item.variantId, cart().lastAdded?.id], ['b', 3]); // every add is a new event
 
 // setQuantity: sets, and 0 removes the line
 cart().setQuantity('a', 5);
