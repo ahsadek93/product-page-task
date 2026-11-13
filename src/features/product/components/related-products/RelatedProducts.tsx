@@ -1,9 +1,9 @@
 import ProductCard, { type ProductCardItem } from './ProductCard';
-import product1 from './assets/product-1.png';
-import product2 from './assets/product-2.png';
-import product3 from './assets/product-3.png';
-import product4 from './assets/product-4.png';
-import product5 from './assets/product-5.png';
+import product1 from './assets/product-1.webp';
+import product2 from './assets/product-2.webp';
+import product3 from './assets/product-3.webp';
+import product4 from './assets/product-4.webp';
+import product5 from './assets/product-5.webp';
 import dashedLine from './assets/line.svg';
 
 // ponytail: static Figma content, becomes props when related products are fetched
