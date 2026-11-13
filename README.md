@@ -121,6 +121,7 @@ Each kind of state lives in the tool built for it:
 
 - Actions: `add`, `setQuantity`, `remove`, `clear`, `setOpen`. Immer lets them write `line.quantity = …` and `items.push(…)` instead of rebuilding arrays.
 - Adding the same variant again merges into one line. Quantities are capped at the stock captured when the item was added (`maxQuantity`); `setQuantity(0)` removes the line.
+- Every add records `lastAdded = { item, id, added }`. The toast shows on each new `id`, and `added` is how many actually went in: when it's 0 (the line was already at its stock cap) the toast says so instead of "Added to cart".
 - Count and subtotal are **derived** (`cartCount`, `cartSubtotal`), never stored, so they can't drift.
 - `persist` saves **only `items`** to `localStorage`; drawer state and the toast event are session-only.
 - A cart line is a **snapshot** (name, image, price, options at add time), so the cart never depends on product data.
@@ -171,11 +172,31 @@ No environment variables or server are needed.
 npm test
 ```
 
-55 unit tests on Node's built-in runner (`node:test`), with no extra dependencies:
+58 unit tests on Node's built-in runner (`node:test`), with no extra dependencies:
 
-- `cart.store.test.ts`: every action, stock caps, merging, persistence (only `items` saved, restored on rehydrate), count/subtotal.
+- `cart.store.test.ts`: every action, stock caps (including how many an add actually added), merging, persistence (only `items` saved, restored on rehydrate), count/subtotal.
 - `variant.test.ts`: variant matching, default selection, pricing, unavailable options (missing vs sold out), selection correction, stock, cart snapshot.
 - `product.adapter.test.ts`: each mapping rule and the trust-boundary errors.
 - `breadcrumb.test.ts`: category name lookup and slug humanising.
 
 The scope is deliberately the **model and store layer**, where the business rules live. Components are thin views over these, so component and E2E tests were left out to keep the suite fast and dependency-free.
+
+## Decisions & known limitations
+
+### Where the API and Figma don't line up
+
+- **Brand label above the title.** Figma shows a brand ("John Lewis ANYDAY"), but the API has no brand or vendor field (every key was checked). The product's first category fills that slot instead, and it's hidden when the product has none.
+- **Sold count and rating** ("1,238 Sold", 4.5 stars) are static Figma values. The API has no sales count, and `?join=reviews` returns no reviews to compute a rating from. Related products and the reviews section are static Figma content for the same reason.
+- **Stock indicator and category chips** aren't in Figma, so they were designed to match the page: stock is a coloured dot and label after the options, categories are chips below the buttons so the designed layout stays intact. The API has no tags, only categories, de-duplicated by name (the demo product lists "Mules" twice).
+- **Untracked stock reads "In stock".** When the store doesn't track stock (`track_stock: false`) the product is always orderable, so that's the honest label.
+- **Error state** isn't in Figma either; it reuses the page's buttons and type scale.
+- **Sale highlighting** is the crossed-out old price next to the bold current price, with no discount badge.
+
+### Requirements handled differently
+
+- **Quantity selector.** Figma has no quantity stepper on the product page, so Add To Cart adds one item. Quantity is changed in the cart drawer, where `+` stops at the stock cap and `−` at 1 removes the line. `toCartItem` already accepts a quantity if a page stepper is wanted later.
+- **Responsive images (`srcset`).** Product images are served by DigitalOcean Spaces at a single size; `?w=400` returns the same 290 KB file, so there are no smaller versions to list. That would need a resizing CDN or sizes generated at upload. In place instead: WebP, aspect-ratio boxes (no layout shift), high fetch priority for the main image, and lazy loading for thumbnails and below-the-fold cards.
+
+### Demo data limits
+
+- The demo product's 9 variants are a full 3 × 3 grid at the same price, with stock untracked, so the live page never shows a disabled option or a price change. That behaviour is covered by `variant.test.ts` and was checked in the browser with injected data: missing combinations show "Not available", sold-out ones "Sold out", and picking a colour moves the size to one that can be ordered.
