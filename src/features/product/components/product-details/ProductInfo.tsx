@@ -17,11 +17,18 @@ type ProductInfoProps = {
 // ponytail: fixed low-stock threshold; make it a store setting if merchants need to tune it
 const LOW_STOCK = 5;
 
+const UNAVAILABLE = { 'sold-out': 'Sold out', missing: 'Not available' } as const;
+
 function ProductInfo({
   product,
-  selection: { selection, select, isAvailable, stock, price, salePrice },
+  selection: { selection, select, unavailableReason, stock, price, salePrice },
   cart: { canAddToCart, addToCart, checkoutNow },
 }: ProductInfoProps) {
+  // Native tooltip on disabled options says why; undefined = selectable, no tooltip.
+  const reasonOf = (name: string, value: string) => {
+    const reason = unavailableReason(name, value);
+    return reason ? UNAVAILABLE[reason] : undefined;
+  };
   const quantity = stock ? stock.quantity : Infinity; // null stock = not tracked
   // Dedupe by name: the API can list two categories with the same name (different slugs).
   const categories = [...new Set(product.categories.map((c) => c.name))];
@@ -102,7 +109,8 @@ function ProductInfo({
                           type="button"
                           aria-label={value.name}
                           aria-pressed={value.name === selected}
-                          disabled={!isAvailable(option.name, value.name)}
+                          disabled={reasonOf(option.name, value.name) !== undefined}
+                          title={reasonOf(option.name, value.name)}
                           onClick={() => select(option.name, value.name)}
                           className="h-10 flex-1 overflow-hidden disabled:cursor-not-allowed disabled:opacity-40 rounded-md bg-white ring-1 ring-transparent ring-offset-[4px] ring-offset-white motion-safe:transition-[box-shadow,opacity] motion-safe:duration-200 motion-safe:ease-out aria-pressed:ring-[#141414] lg:w-[75px] lg:flex-none lg:rounded-lg"
                         >
@@ -118,7 +126,8 @@ function ProductInfo({
                           key={value.id}
                           type="button"
                           aria-pressed={value.name === selected}
-                          disabled={!isAvailable(option.name, value.name)}
+                          disabled={reasonOf(option.name, value.name) !== undefined}
+                          title={reasonOf(option.name, value.name)}
                           onClick={() => select(option.name, value.name)}
                           className="h-10 rounded-md border border-[#e6e6e6] motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out disabled:cursor-not-allowed disabled:text-[#b8b8b8] disabled:line-through text-xl font-semibold leading-[1.2] text-[#525252] aria-pressed:border-[#333] aria-pressed:bg-[#ebebeb] aria-pressed:text-[#141414] lg:rounded-lg"
                         >

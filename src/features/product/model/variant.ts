@@ -3,8 +3,20 @@ import type { CartItem } from '@/features/cart/types/cart';
 
 export type Selection = Record<string, string>; // { color: 'brown', size: '40' }
 
-export const findVariant = (variants: ProductVariant[], selection: Selection) =>
-  variants.find((v) => Object.entries(selection).every(([name, value]) => v.options[name] === value));
+const matches = (v: ProductVariant, selection: Selection) =>
+  Object.entries(selection).every(([name, value]) => v.options[name] === value);
+
+export const findVariant = (variants: ProductVariant[], selection: Selection) => variants.find((v) => matches(v, selection));
+
+// Out of stock only blocks a variant when the store tracks stock AND refuses orders without it.
+const orderable = (product: Product, v: ProductVariant) =>
+  !product.trackStock || !product.blockOrdersWhenOutOfStock || v.quantity > 0;
+
+// First variant matching the picks, preferring one that can be ordered.
+const bestVariant = (product: Product, selection: Selection) => {
+  const fits = product.variants.filter((v) => matches(v, selection));
+  return fits.find((v) => orderable(product, v)) ?? fits[0];
+};
 
 // Picks for the options that come before `name` (plus `name` itself when `include`).
 const picksUpTo = (product: Product, selection: Selection, name: string, include: boolean) => {
@@ -14,20 +26,28 @@ const picksUpTo = (product: Product, selection: Selection, name: string, include
 
 // Each option is limited only by the options above it (size by color, never color by size),
 // so every value of the first option stays reachable and disabled buttons can't trap the user.
-export const isAvailable = (product: Product, selection: Selection, name: string, value: string) =>
-  product.variants.length === 0 ||
-  findVariant(product.variants, { ...picksUpTo(product, selection, name, false), [name]: value }) !== undefined;
-
-// If the new pick breaks a later option (black has no 38), move the later options to the first variant that fits.
-export const nextSelection = (product: Product, selection: Selection, name: string, value: string) => {
-  const wanted = { ...selection, [name]: value };
-  if (product.variants.length === 0 || findVariant(product.variants, wanted)) return wanted;
-  return findVariant(product.variants, picksUpTo(product, wanted, name, true))?.options ?? wanted;
+// 'missing' = no variant has that combination; 'sold-out' = they exist but none can be ordered. null = selectable.
+export const unavailableReason = (product: Product, selection: Selection, name: string, value: string) => {
+  if (product.variants.length === 0) return null;
+  const picks = { ...picksUpTo(product, selection, name, false), [name]: value };
+  const fits = product.variants.filter((v) => matches(v, picks));
+  if (fits.length === 0) return 'missing';
+  return fits.some((v) => orderable(product, v)) ? null : 'sold-out';
 };
 
-// Start from a combination that exists: the first variant's, else the first value of each option.
+// If the new pick breaks a later option (black has no 38, or black 38 is sold out), move the later
+// options to the first variant that fits, preferring one that can be ordered.
+export const nextSelection = (product: Product, selection: Selection, name: string, value: string) => {
+  const wanted = { ...selection, [name]: value };
+  if (product.variants.length === 0) return wanted;
+  const exact = findVariant(product.variants, wanted);
+  if (exact && orderable(product, exact)) return wanted;
+  return bestVariant(product, picksUpTo(product, wanted, name, true))?.options ?? wanted;
+};
+
+// Start from a combination that exists (orderable if any is): a variant's, else the first value of each option.
 export const defaultSelection = (product: Product): Selection =>
-  product.variants[0]?.options ??
+  bestVariant(product, {})?.options ??
   Object.fromEntries(product.options.flatMap((o) => (o.values[0] ? [[o.name, o.values[0].name]] : [])));
 
 // null = store doesn't track stock, show nothing. Variant quantity wins; product quantity when there are no variants.

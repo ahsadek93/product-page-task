@@ -2,7 +2,7 @@
 // Run: node src/features/product/model/variant.test.ts
 import assert from 'node:assert/strict';
 import type { Product, ProductVariant } from '@/features/product/types/product';
-import { defaultSelection, findVariant, isAvailable, nextSelection, priceOf, stockOf, toCartItem } from './variant.ts';
+import { defaultSelection, findVariant, unavailableReason, nextSelection, priceOf, stockOf, toCartItem } from './variant.ts';
 
 const v = (id: string, options: Record<string, string>, price = 100, salePrice: number | null = null): ProductVariant =>
   ({ id, price, salePrice, quantity: 1, options });
@@ -33,17 +33,37 @@ const trap = product({
 });
 const brown38 = { color: 'brown', size: '38' };
 
-// isAvailable: size limited by color; color never limited by size
-assert.equal(isAvailable(trap, brown38, 'size', '40'), false); // brown has no 40 → disabled
-assert.equal(isAvailable(trap, brown38, 'size', '38'), true);
-assert.equal(isAvailable(trap, brown38, 'color', 'black'), true); // reachable even though black has no 38
-assert.equal(isAvailable(product({ variants: [] }), brown38, 'size', '99'), true); // no variants, nothing restricted
+// unavailableReason: size limited by color; color never limited by size
+assert.equal(unavailableReason(trap, brown38, 'size', '40'), 'missing'); // brown has no 40 → disabled
+assert.equal(unavailableReason(trap, brown38, 'size', '38'), null);
+assert.equal(unavailableReason(trap, brown38, 'color', 'black'), null); // reachable even though black has no 38
+assert.equal(unavailableReason(product({ variants: [] }), brown38, 'size', '99'), null); // no variants, nothing restricted
 const ghost = product({ options: trap.options, variants: [v('b38', brown38)] });
-assert.equal(isAvailable(ghost, brown38, 'color', 'black'), false); // color with no variant at all → disabled
+assert.equal(unavailableReason(ghost, brown38, 'color', 'black'), 'missing'); // color with no variant at all → disabled
 
 // nextSelection: valid pick kept; pick that breaks a later option moves it to a fitting variant
 assert.deepEqual(nextSelection(trap, brown38, 'size', '38'), brown38);
 assert.deepEqual(nextSelection(trap, brown38, 'color', 'black'), { color: 'black', size: '40' });
+
+// Stock: sold-out variants count as unavailable only when stock is tracked AND orders are blocked
+const sold = (id: string, options: Record<string, string>) => ({ ...v(id, options), quantity: 0 });
+const stocked = (over: Partial<Product> = {}) =>
+  product({
+    options: trap.options,
+    trackStock: true,
+    blockOrdersWhenOutOfStock: true,
+    // brown 38 sold out, brown 40 in stock; black only in 38, sold out
+    variants: [sold('b38', brown38), v('b40', { color: 'brown', size: '40' }), sold('k38', { color: 'black', size: '38' })],
+    ...over,
+  });
+assert.equal(unavailableReason(stocked(), brown38, 'size', '38'), 'sold-out'); // sold out → disabled
+assert.equal(unavailableReason(stocked(), brown38, 'size', '40'), null);
+assert.equal(unavailableReason(stocked(), brown38, 'color', 'black'), 'sold-out'); // every black variant sold out
+assert.equal(unavailableReason(stocked({ blockOrdersWhenOutOfStock: false }), brown38, 'size', '38'), null); // can still order
+assert.equal(unavailableReason(stocked({ trackStock: false }), brown38, 'size', '38'), null); // quantities meaningless
+assert.deepEqual(defaultSelection(stocked()), { color: 'brown', size: '40' }); // skips sold-out first variant
+assert.deepEqual(nextSelection(stocked(), { color: 'brown', size: '40' }, 'color', 'brown'), { color: 'brown', size: '40' });
+assert.deepEqual(nextSelection(stocked(), { color: 'black', size: '38' }, 'color', 'brown'), { color: 'brown', size: '40' }); // moves off sold-out 38
 
 // stockOf: untracked → null; variant qty wins; blocking only when the store says so
 const tracked = (over: Partial<Product> = {}) => product({ trackStock: true, blockOrdersWhenOutOfStock: true, quantity: 7, ...over });
