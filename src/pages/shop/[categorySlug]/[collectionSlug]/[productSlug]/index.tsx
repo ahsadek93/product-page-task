@@ -7,6 +7,10 @@ import ProductGrid from '@/features/product/components/product-grid/ProductGrid'
 import ProductReviews from '@/features/product/components/product-reviews/ProductReviews';
 import { useProduct } from '@/features/product/hooks/useProduct';
 import { useProductBreadcrumb } from '@/features/product/hooks/useProductBreadcrumb';
+import dashedLine from '@/shared/assets/dashed-line-wide.svg';
+
+// Figma puts a dashed line between sections, with the same gap on both sides.
+const Divider = () => <img src={dashedLine} alt="" className="my-14 block h-[0.5px] w-full lg:my-20" />;
 
 function ProductPage() {
   const { categorySlug = '', collectionSlug = '', productSlug = '' } = useParams();
@@ -15,7 +19,7 @@ function ProductPage() {
 
   // Middle crumbs are text: no category/collection pages exist yet.
   return (
-    <div className="mx-auto max-w-[1240px] px-5 py-6">
+    <div className="mx-auto max-w-[1240px] px-5 pb-14 pt-6 lg:pb-20">
       <Breadcrumb
         items={[
           { label: 'Homepage', to: '/' },
@@ -33,15 +37,12 @@ function ProductPage() {
       <div className="mt-6 lg:mt-10">
         {isPending ? <ProductDetailsSkeleton /> : isError ? <ProductError /> : <ProductDetails product={product} />}
       </div>
-      <div className="mt-16 lg:mt-24">
-        <ProductGrid title="Related Product" />
-      </div>
-      <div className="mt-14 lg:mt-20">
-        <ProductReviews />
-      </div>
-      <div className="mt-14 lg:mt-20">
-        <ProductGrid title="Popular this week" />
-      </div>
+      <Divider />
+      <ProductGrid title="Related Product" />
+      <Divider />
+      <ProductReviews />
+      <Divider />
+      <ProductGrid title="Popular this week" />
     </div>
   );
 }

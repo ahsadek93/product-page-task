@@ -4,7 +4,6 @@ import product2 from './assets/product-2.webp';
 import product3 from './assets/product-3.webp';
 import product4 from './assets/product-4.webp';
 import product5 from './assets/product-5.webp';
-import dashedLine from './assets/line.svg';
 
 // ponytail: static Figma content, becomes props when related products are fetched
 const products: ProductCardItem[] = [
@@ -69,8 +68,6 @@ function ProductGrid({ title }: { title: string }) {
           </li>
         ))}
       </ul>
-
-      <img src={dashedLine} alt="" className="mt-14 block h-[0.5px] w-full lg:mt-20" />
     </section>
   );
 }

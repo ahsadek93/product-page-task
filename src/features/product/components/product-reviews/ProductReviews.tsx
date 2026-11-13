@@ -10,7 +10,6 @@ import filterIcon from './assets/filter.svg';
 import arrowIcon from './assets/arrow-right.svg';
 import separator from './assets/line-review.svg';
 import separatorMobile from './assets/line-review-m.svg';
-import bottomLine from './assets/line-bottom.svg';
 
 // ponytail: static Figma content and fixed selections, become props when reviews are fetched
 const reviews: Review[] = [
@@ -135,8 +134,6 @@ function ProductReviews() {
           </nav>
         </div>
       </div>
-
-      <img src={bottomLine} alt="" className="mt-14 block h-[0.5px] w-full lg:mt-20" />
     </section>
   );
 }
