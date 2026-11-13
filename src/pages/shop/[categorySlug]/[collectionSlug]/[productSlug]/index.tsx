@@ -5,20 +5,28 @@ import ProductDetailsSkeleton from '@/features/product/components/product-detail
 import RelatedProducts from '@/features/product/components/related-products/RelatedProducts';
 import ProductReviews from '@/features/product/components/product-reviews/ProductReviews';
 import { useProduct } from '@/features/product/hooks/useProduct';
+import { useProductBreadcrumb } from '@/features/product/hooks/useProductBreadcrumb';
 
 function ProductPage() {
-  const { productSlug = '' } = useParams();
+  const { categorySlug = '', collectionSlug = '', productSlug = '' } = useParams();
   const { data: product, isPending, isError } = useProduct(productSlug);
+  const crumbs = useProductBreadcrumb(categorySlug, collectionSlug, product);
 
-  // ponytail: sample labels until product data is wired in; middle crumbs are text, no category/collection pages exist
+  // Middle crumbs are text: no category/collection pages exist yet.
   return (
     <div className="mx-auto max-w-[1240px] px-5 py-6">
       <Breadcrumb
         items={[
           { label: 'Homepage', to: '/' },
-          { label: 'Women' },
-          { label: "Women's Shirts & Tops" },
-          { label: 'Long Sleeve Overshirt, Khaki, 6' },
+          { label: crumbs.category },
+          { label: crumbs.collection },
+          {
+            label: isPending ? (
+              <span className="inline-block h-[1em] w-48 rounded bg-[#f2f2f2] align-middle motion-safe:animate-pulse" />
+            ) : (
+              (crumbs.name ?? 'Product')
+            ),
+          },
         ]}
       />
       <div className="mt-6 lg:mt-10">

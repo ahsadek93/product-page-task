@@ -1,8 +1,9 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import arrowRight from './arrow-right.svg';
 
 export type BreadcrumbItem = {
-  label: string;
+  label: ReactNode; // node so callers can pass a loading placeholder
   to?: string;
 };
 
