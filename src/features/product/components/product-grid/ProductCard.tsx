@@ -14,7 +14,7 @@ function ProductCard({ item }: { item: ProductCardItem }) {
   return (
     <article className="flex flex-col gap-[11.7px] font-clash lg:gap-4">
       <div className="aspect-[212/284] overflow-hidden rounded-md bg-[#f2f2f2] lg:rounded-lg">
-        <img src={item.image} alt={item.name} className="size-full object-cover" />
+        <img src={item.image} alt={item.name} loading="lazy" decoding="async" className="size-full object-cover" />
       </div>
       <div className="flex flex-col gap-[5.8px] lg:gap-2">
         <div className="flex flex-col gap-[4.4px] lg:gap-1.5">
