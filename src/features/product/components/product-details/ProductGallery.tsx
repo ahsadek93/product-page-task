@@ -8,7 +8,9 @@ type ProductGalleryProps = {
   name: string;
 };
 
-const actionClass = 'rounded-md bg-[#f2f2f2] p-3 lg:rounded-lg lg:p-4';
+// Hover darkens (mouse devices only, so taps don't leave it stuck), press shrinks slightly.
+const actionClass =
+  'rounded-md bg-[#f2f2f2] p-3 motion-safe:transition motion-safe:duration-200 motion-safe:ease-out active:scale-95 [@media(hover:hover)]:hover:bg-[#e4e4e4] lg:rounded-lg lg:p-4';
 
 // Mobile: thumbnails span under image + action column. Desktop: thumbnails sit under the image only.
 function ProductGallery({ images, name }: ProductGalleryProps) {
