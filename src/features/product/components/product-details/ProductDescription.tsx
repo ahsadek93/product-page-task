@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DOMPurify from 'dompurify';
 import SwapText from '@/shared/components/swap-text/SwapText';
 
@@ -9,7 +9,7 @@ function ProductDescription({ html }: { html: string }) {
   const [fullHeight, setFullHeight] = useState<number | null>(null); // null = fits, no toggle
 
   // BE description is merchant HTML: sanitize before injecting
-  const clean = DOMPurify.sanitize(html);
+  const clean = useMemo(() => DOMPurify.sanitize(html), [html]);
 
   useLayoutEffect(() => {
     const el = ref.current;

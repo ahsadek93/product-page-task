@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from 'react';
+import { useRef, useState, type MouseEvent } from 'react';
 import shareIcon from './assets/share.svg';
 import heartIcon from '@/shared/assets/heart.svg';
 import chevronIcon from '@/shared/assets/chevron.svg';
@@ -16,7 +16,7 @@ const actionClass =
 function ProductGallery({ images, name }: ProductGalleryProps) {
   const [active, setActive] = useState(0);
   const [zoomed, setZoomed] = useState(false);
-  const [origin, setOrigin] = useState('50% 50%');
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const show = (i: number) => {
     setActive((i + images.length) % images.length);
@@ -24,10 +24,16 @@ function ProductGallery({ images, name }: ProductGalleryProps) {
   };
 
   // Zoom follows the cursor; keyboard clicks (detail 0) zoom from the centre.
+  // Written straight to the DOM so mouse moves don't re-render the gallery.
   const aim = (e: MouseEvent<HTMLElement>) => {
-    if (e.detail === 0 && e.type === 'click') return setOrigin('50% 50%');
+    const img = imgRef.current;
+    if (!img) return;
+    if (e.detail === 0 && e.type === 'click') {
+      img.style.transformOrigin = '50% 50%';
+      return;
+    }
     const r = e.currentTarget.getBoundingClientRect();
-    setOrigin(`${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`);
+    img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
   };
 
   return (
@@ -49,10 +55,10 @@ function ProductGallery({ images, name }: ProductGalleryProps) {
           >
             <img
               key={active}
+              ref={imgRef}
               src={images[active]}
               alt={`${name}, image ${active + 1} of ${images.length}`}
               fetchPriority="high"
-              style={{ transformOrigin: origin }}
               className={`size-full object-cover motion-safe:animate-[fade-in_300ms_ease-out] motion-safe:transition-transform motion-safe:duration-300 [@media(hover:hover)]:group-hover:scale-[2] ${zoomed ? 'scale-[2]' : ''}`}
             />
           </button>
