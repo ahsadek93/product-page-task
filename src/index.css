@@ -8,5 +8,11 @@
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Clash Grotesk', sans-serif;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
 }
