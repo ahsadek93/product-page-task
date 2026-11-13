@@ -1,6 +1,7 @@
 import type { Product } from '@/features/product/types/product';
 import type { VariantSelection } from '@/features/product/hooks/useVariantSelection';
 import { formatPrice } from '@/shared/utils/formatPrice';
+import SwapText from '@/shared/components/swap-text/SwapText';
 import ProductDescription from './ProductDescription';
 import dotIcon from './assets/dot.svg';
 import starIcon from './assets/star.svg';
@@ -68,7 +69,10 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
                 <div key={option.name} className="flex flex-col gap-[18px]">
                   <div className="flex items-center justify-between leading-[1.2]">
                     <p className="text-lg font-medium capitalize text-[#8f8f8f] lg:text-xl">
-                      {option.name}: <span className="font-semibold text-[#292929]">{selected}</span>
+                      {option.name}:{' '}
+                      <span className="font-semibold text-[#292929]">
+                        <SwapText text={selected ?? ''} />
+                      </span>
                     </p>
                     {option.name === 'size' && (
                       <button type="button" className="text-base font-medium text-[#525252] underline">
@@ -87,9 +91,10 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
                           aria-pressed={value.name === selected}
                           disabled={!isAvailable(option.name, value.name)}
                           onClick={() => select(option.name, value.name)}
-                          className="h-10 flex-1 overflow-hidden disabled:cursor-not-allowed disabled:opacity-40 rounded-md border border-transparent bg-white aria-pressed:border-[#141414] aria-pressed:p-[5px] lg:w-[75px] lg:flex-none lg:rounded-lg"
+                          className="h-10 flex-1 overflow-hidden disabled:cursor-not-allowed disabled:opacity-40 rounded-md bg-white ring-1 ring-transparent ring-offset-[4px] ring-offset-white motion-safe:transition-[box-shadow,opacity] motion-safe:duration-200 motion-safe:ease-out aria-pressed:ring-[#141414] lg:w-[75px] lg:flex-none lg:rounded-lg"
                         >
-                          <img src={value.image} alt="" className="size-full rounded object-cover" />
+                          {/* Selection is a ring outside the box, so the image never resizes or re-crops */}
+                          <img src={value.image} alt="" className="size-full object-cover" />
                         </button>
                       ))}
                     </div>
@@ -102,7 +107,7 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
                           aria-pressed={value.name === selected}
                           disabled={!isAvailable(option.name, value.name)}
                           onClick={() => select(option.name, value.name)}
-                          className="h-10 rounded-md border border-[#e6e6e6] disabled:cursor-not-allowed disabled:text-[#b8b8b8] disabled:line-through text-xl font-semibold leading-[1.2] text-[#525252] aria-pressed:border-[#333] aria-pressed:bg-[#ebebeb] aria-pressed:text-[#141414] lg:rounded-lg"
+                          className="h-10 rounded-md border border-[#e6e6e6] motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out disabled:cursor-not-allowed disabled:text-[#b8b8b8] disabled:line-through text-xl font-semibold leading-[1.2] text-[#525252] aria-pressed:border-[#333] aria-pressed:bg-[#ebebeb] aria-pressed:text-[#141414] lg:rounded-lg"
                         >
                           {value.name}
                         </button>
