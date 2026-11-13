@@ -38,14 +38,15 @@ The URL shape is `/shop/:categorySlug/:collectionSlug/:productSlug`; the home pa
 
 ### Scripts
 
-| Command           | What it does                                                  |
-| ----------------- | ------------------------------------------------------------- |
-| `npm run dev`     | Vite dev server with hot reload (`npm start` is an alias)     |
-| `npm run build`   | Type-check (`tsc --noEmit`), then production build to `dist/` |
-| `npm run preview` | Serve the production build locally                            |
-| `npm test`        | Run the model and store unit tests (`node:test`)              |
-| `npm run lint`    | ESLint: `typescript-eslint` recommended + React hooks rules   |
-| `npm run format`  | Format everything with Prettier (`format:check` to verify)    |
+| Command                 | What it does                                                  |
+| ----------------------- | ------------------------------------------------------------- |
+| `npm run dev`           | Vite dev server with hot reload (`npm start` is an alias)     |
+| `npm run build`         | Type-check (`tsc --noEmit`), then production build to `dist/` |
+| `npm run preview`       | Serve the production build locally                            |
+| `npm test`              | Run the model and store unit tests (`node:test`)              |
+| `npm run test:coverage` | Same tests with Node's built-in coverage report               |
+| `npm run lint`          | ESLint: `typescript-eslint` recommended + React hooks rules   |
+| `npm run format`        | Format everything with Prettier (`format:check` to verify)    |
 
 ## Architecture
 
@@ -62,11 +63,11 @@ src/
     cart/
       model/       Zustand store (+ count/subtotal helpers)
       types/       CartItem snapshot
-      hooks/       useCart, useCartCount, useCartActions
+      hooks/       useCart, useCartCount, useCartActions, useCartToast
       components/  CartDrawer, CartLine, CartToast
   layouts/         app shell: header (cart button), footer, announcement bar, DefaultLayout
   pages/           route components (Nuxt-style folders: shop/[categorySlug]/[collectionSlug]/[productSlug])
-  shared/          feature-agnostic: api() fetch wrapper, Breadcrumb, SwapText, formatPrice
+  shared/          feature-agnostic: api() fetch wrapper, Breadcrumb, SwapText, ErrorBoundary, formatPrice
 ```
 
 Rules that keep it clean:
@@ -74,29 +75,35 @@ Rules that keep it clean:
 - **Components never import a store or the API.** They get data from hooks.
 - **Business logic lives in `model/`** as plain functions, so it is unit-tested without React.
 - **Features talk through hooks and types, not internals.** Product adds to the cart via `useCartActions`; the cart never imports product (one-way dependency, no cycle).
-- **No barrels, no DI, no classes.** Tests sit next to the code they test.
+- **No barrels, no DI, no classes.** The one exception is `ErrorBoundary`: React has no hook for catching render errors. Tests sit next to the code they test.
+
+Styling is Tailwind. Figma's colours are named theme tokens in `tailwind.config.js` (`ink-900` … `ink-200`, `line`, `surface`, `review-*`, `success` / `warning` / `danger`); colours used only once or twice stay as arbitrary values. The two Figma button looks are shared as `.btn-primary` and `.btn-outline` in `src/index.css`.
 
 ## Components
 
 Props are typed in each file; these are the ones worth knowing.
 
-| Component                | Props                                        | Usage                                                                                                                                 |
-| ------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `ProductDetails`         | `product: Product`                           | Product section. Owns variant selection (`useVariantSelection`) and add-to-cart (`useAddToCart`) and passes them down.                |
-| `ProductGallery`         | `images: string[]`, `name: string`           | Main image and thumbnails, prev/next, hover zoom (mouse) and click/tap zoom. Hides controls for 0–1 images.                           |
-| `ProductInfo`            | `product`, `selection`, `cart`               | Title, price/sale, options, stock status, CTAs, category chips. Disabled options explain why on hover ("Sold out" / "Not available"). |
-| `ProductDescription`     | `html: string`                               | Sanitised (DOMPurify) merchant HTML, collapsed to ~8 lines with an animated See More / See Less.                                      |
-| `ProductDetailsSkeleton` | –                                            | Loading placeholder with the same layout, so nothing jumps when data arrives.                                                         |
-| `ProductError`           | –                                            | Error state with a link back home.                                                                                                    |
-| `ProductGrid`            | `title: string`                              | Grid of `ProductCard`s (2 / 3 / 5 columns). Used twice: "Related Product" and "Popular this week".                                    |
-| `ProductReviews`         | –                                            | Reviews section (`ReviewSummary`, `ReviewFilters`, `ReviewItem`).                                                                     |
-| `CartDrawer`             | –                                            | Slide-over cart (Headless UI `Dialog`): lines, quantity steppers, subtotal. Opened from the header or "View Cart".                    |
-| `CartLine`               | `item`, `onQuantity(n)`, `onRemove()`        | One cart line; `+` is disabled at the stock cap, `−` at 1 removes the line.                                                           |
-| `CartToast`              | –                                            | "Added to cart" toast after every add. Auto-dismisses after 4s, pauses on hover/focus, announced to screen readers.                   |
-| `Breadcrumb`             | `items: { label: ReactNode; to?: string }[]` | Last item is the current page. `label` is a node so a loading placeholder can be passed.                                              |
-| `SwapText`               | `text: string`                               | Animates a text change (selected option name, See More / See Less).                                                                   |
+| Component                | Props                                                 | Usage                                                                                                                                                          |
+| ------------------------ | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ProductDetails`         | `product: Product`                                    | Product section. Owns variant selection (`useVariantSelection`) and add-to-cart (`useAddToCart`) and passes them down.                                         |
+| `ProductGallery`         | `images: string[]`, `name: string`                    | Main image and thumbnails, prev/next, hover zoom (mouse) and click/tap zoom. Hides controls for 0–1 images.                                                    |
+| `ProductInfo`            | `product`, `selection`, `cart`                        | Title, price/sale, options (`ProductOptions`), stock status, CTAs, category chips.                                                                             |
+| `ProductOptions`         | `options`, `selection`, `select`, `unavailableReason` | One labelled group per option. Disabled options explain why on hover and to screen readers ("Sold out" / "Not available").                                     |
+| `ProductDescription`     | `html: string`                                        | Sanitised (DOMPurify) merchant HTML, collapsed to Figma's 4 lines on desktop and 5 on mobile, with an inline See More on the last line and an animated expand. |
+| `ProductDetailsSkeleton` | –                                                     | Loading placeholder with the same layout, so nothing jumps when data arrives.                                                                                  |
+| `ProductError`           | `onRetry()`, `retrying: boolean`                      | Error state with a Try again button (shows "Retrying…" while busy) and a link back home.                                                                       |
+| `ProductGrid`            | `title: string`                                       | Grid of `ProductCard`s (2 / 3 / 5 columns). Used twice: "Related Product" and "Popular this week".                                                             |
+| `ProductReviews`         | –                                                     | Reviews section (`ReviewSummary`, `ReviewFilters`, `ReviewItem`).                                                                                              |
+| `CartDrawer`             | –                                                     | Slide-over cart (Headless UI `Dialog`): lines, quantity steppers, subtotal. Opened from the header or "View Cart".                                             |
+| `CartLine`               | `item`, `onQuantity(n)`, `onRemove()`                 | One cart line; `+` is disabled at the stock cap, `−` at 1 removes the line.                                                                                    |
+| `CartToast`              | –                                                     | "Added to cart" toast after every add. Auto-dismisses after 4s, pauses on hover/focus, announced to screen readers.                                            |
+| `ErrorBoundary`          | `fallback`, `children`                                | Wraps the app in `src/index.tsx`; a render crash shows a "Something went wrong" screen with a link home.                                                       |
+| `Breadcrumb`             | `items: { label: ReactNode; to?: string }[]`          | Last item is the current page. `label` is a node so a loading placeholder can be passed.                                                                       |
+| `SwapText`               | `text: string`                                        | Animates a text change (selected option name, See More / See Less).                                                                                            |
 
-Option rendering in `ProductInfo`: `image` options become image swatches; a `color` option without images becomes colour swatches filled from the value's name when it's a CSS colour (`brown`), or the name as text when it isn't; everything else becomes text buttons.
+Option rendering in `ProductOptions`: `image` options become image swatches; a `color` option without images becomes colour swatches filled from the value's name when it's a CSS colour (`brown`), or the name as text when it isn't; everything else becomes text buttons.
+
+Any URL that matches no route renders the not-found page (`src/pages/not-found`) inside the normal layout.
 
 Example:
 
@@ -124,12 +131,15 @@ Each kind of state lives in the tool built for it:
 - Every add records `lastAdded = { item, id, added }`. The toast shows on each new `id`, and `added` is how many actually went in: when it's 0 (the line was already at its stock cap) the toast says so instead of "Added to cart".
 - Count and subtotal are **derived** (`cartCount`, `cartSubtotal`), never stored, so they can't drift.
 - `persist` saves **only `items`** to `localStorage`; drawer state and the toast event are session-only.
+- The saved cart is **validated on load**: malformed lines (wrong types, missing `options`, quantity below 1) are dropped instead of crashing the header or drawer.
+- **Cross-tab sync:** a `storage` event for the cart reloads it, so a change in another tab shows up and this tab's next write doesn't overwrite it with stale items.
 - A cart line is a **snapshot** (name, image, price, options at add time), so the cart never depends on product data.
 
 **Avoiding unnecessary re-renders**, instead of wrapping components in `memo`:
 
 - `useCartCount` subscribes to a single number, so the header re-renders only when the count changes.
 - `useCartActions` reads actions without subscribing, so the product section never re-renders on cart changes.
+- `useCartToast` subscribes to `lastAdded`, `isOpen` and `setOpen` only, so the toast doesn't re-render on quantity changes.
 - `useCart` uses `useShallow` for the drawer, which needs most of the cart.
 - Selection state sits in `ProductDetails`, so the grids and reviews never re-render on a variant pick.
 
@@ -144,7 +154,8 @@ Each kind of state lives in the tool built for it:
   - variant props array → `{ color: 'brown', size: '40' }`;
   - strips the rich-text editor's empty paragraphs and `&nbsp;` from the description (XSS sanitising happens at render with DOMPurify).
 - **Pricing and stock rules** (`variant.ts`): a variant's price and sale override the product's when set; a sale only counts if it's below the price; stock is ignored when the store doesn't track it, and only blocks ordering when the store says so.
-- **Loading and errors:** a layout-matched skeleton (breadcrumb included) while loading; `ProductError` on failure.
+- **Cancelling:** `useProduct` passes React Query's `AbortSignal` to `fetch`, so a request for a page the user already left is aborted.
+- **Loading and errors:** a layout-matched skeleton (breadcrumb included) while loading; `ProductError` on failure, after React Query's default 3 retries. Its Try again button refetches; the error screen stays up (with "Retrying…") until the refetch succeeds or fails again.
 
 ## Deployment
 
@@ -172,12 +183,14 @@ No environment variables or server are needed.
 npm test
 ```
 
-58 unit tests on Node's built-in runner (`node:test`), with no extra dependencies:
+61 unit tests on Node's built-in runner (`node:test`), with no extra dependencies:
 
-- `cart.store.test.ts`: every action, stock caps (including how many an add actually added), merging, persistence (only `items` saved, restored on rehydrate), count/subtotal.
+- `cart.store.test.ts`: every action, stock caps (including how many an add actually added), merging, persistence (only `items` saved, restored on rehydrate, malformed lines dropped, reload on another tab's change), count/subtotal.
 - `variant.test.ts`: variant matching, default selection, pricing, unavailable options (missing vs sold out), selection correction, stock, cart snapshot.
 - `product.adapter.test.ts`: each mapping rule and the trust-boundary errors.
 - `breadcrumb.test.ts`: category name lookup and slug humanising.
+
+`npm run test:coverage` adds Node's built-in coverage report: **100 % lines, 94.63 % branches, 100 % functions** across the four tested files.
 
 The scope is deliberately the **model and store layer**, where the business rules live. Components are thin views over these, so component and E2E tests were left out to keep the suite fast and dependency-free.
 
@@ -190,6 +203,7 @@ The scope is deliberately the **model and store layer**, where the business rule
 - **Stock indicator and category chips** aren't in Figma, so they were designed to match the page: stock is a coloured dot and label after the options, categories are chips below the buttons so the designed layout stays intact. The API has no tags, only categories, de-duplicated by name (the demo product lists "Mules" twice).
 - **Untracked stock reads "In stock".** When the store doesn't track stock (`track_stock: false`) the product is always orderable, so that's the honest label.
 - **Error state** isn't in Figma either; it reuses the page's buttons and type scale.
+- **Currency.** Prices are the store's EGP, shown as `E£` (the narrow symbol) so the price row fits the design. Figma's `£`, the `$` on the product cards and the `USD` footer selector are static design content.
 - **Sale highlighting** is the crossed-out old price next to the bold current price, with no discount badge.
 
 ### Requirements handled differently
