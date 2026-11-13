@@ -8,7 +8,7 @@ type CartLineProps = {
 };
 
 const stepper =
-  'flex size-9 items-center justify-center text-lg text-[#525252] motion-safe:transition-colors motion-safe:duration-200 hover:bg-[#ebebeb] hover:text-[#141414] disabled:cursor-not-allowed disabled:text-[#b8b8b8] disabled:hover:bg-transparent';
+  'flex size-9 items-center justify-center text-lg focus-visible:-outline-offset-2 text-[#525252] motion-safe:transition-colors motion-safe:duration-200 hover:bg-[#ebebeb] hover:text-[#141414] disabled:cursor-not-allowed disabled:text-[#b8b8b8] disabled:hover:bg-transparent';
 
 function CartLine({ item, onQuantity, onRemove }: CartLineProps) {
   return (

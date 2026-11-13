@@ -1,7 +1,7 @@
 import { useState, type MouseEvent } from 'react';
 import shareIcon from './assets/share.svg';
-import heartIcon from './assets/heart.svg';
-import chevronIcon from './assets/chevron.svg';
+import heartIcon from '@/shared/assets/heart.svg';
+import chevronIcon from '@/shared/assets/chevron.svg';
 
 type ProductGalleryProps = {
   images: string[];
@@ -45,7 +45,7 @@ function ProductGallery({ images, name }: ProductGalleryProps) {
               aim(e);
               setZoomed((z) => !z);
             }}
-            className="group block size-full cursor-zoom-in aria-pressed:cursor-zoom-out"
+            className="group block size-full cursor-zoom-in focus-visible:-outline-offset-2 aria-pressed:cursor-zoom-out"
           >
             <img
               key={active}

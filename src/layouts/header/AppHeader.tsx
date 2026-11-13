@@ -7,9 +7,9 @@ import searchIcon from './assets/search.svg';
 import cartIcon from './assets/cart.svg';
 import badge from './assets/badge.svg';
 import menuIcon from './assets/menu.svg';
-import chevronIcon from './assets/chevron.svg';
+import chevronIcon from '@/shared/assets/chevron.svg';
 import userIcon from './assets/user.svg';
-import heartIcon from './assets/heart.svg';
+import heartIcon from '@/shared/assets/heart.svg';
 import divider from './assets/divider.svg';
 import dividerDesktop from './assets/divider-desktop.svg';
 
@@ -64,7 +64,12 @@ function AppHeader() {
             <button type="button" aria-label="Wishlist" className="-m-2.5 hidden p-2.5 lg:block">
               <img src={heartIcon} alt="" width={20} height={20} />
             </button>
-            <button type="button" aria-label={`Cart, ${count} items`} onClick={open} className="relative -m-2.5 p-2.5">
+            <button
+              type="button"
+              aria-label={`Cart, ${count} ${count === 1 ? 'item' : 'items'}`}
+              onClick={open}
+              className="relative -m-2.5 p-2.5"
+            >
               <img src={cartIcon} alt="" width={20} height={20} />
               {count > 0 && (
                 <span
