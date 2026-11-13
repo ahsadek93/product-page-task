@@ -2,6 +2,7 @@ import { useParams } from 'react-router';
 import Breadcrumb from '@/shared/components/breadcrumb/Breadcrumb';
 import ProductDetails from '@/features/product/components/product-details/ProductDetails';
 import ProductDetailsSkeleton from '@/features/product/components/product-details/ProductDetailsSkeleton';
+import ProductError from '@/features/product/components/product-details/ProductError';
 import ProductGrid from '@/features/product/components/product-grid/ProductGrid';
 import ProductReviews from '@/features/product/components/product-reviews/ProductReviews';
 import { useProduct } from '@/features/product/hooks/useProduct';
@@ -30,13 +31,7 @@ function ProductPage() {
         ]}
       />
       <div className="mt-6 lg:mt-10">
-        {isPending ? (
-          <ProductDetailsSkeleton />
-        ) : isError ? (
-          <p className="py-16 text-center">Couldn't load this product.</p>
-        ) : (
-          <ProductDetails product={product} />
-        )}
+        {isPending ? <ProductDetailsSkeleton /> : isError ? <ProductError /> : <ProductDetails product={product} />}
       </div>
       <div className="mt-16 lg:mt-24">
         <ProductGrid title="Related Product" />
