@@ -1,7 +1,7 @@
-import DOMPurify from 'dompurify';
 import type { Product } from '@/features/product/types/product';
 import type { VariantSelection } from '@/features/product/hooks/useVariantSelection';
 import { formatPrice } from '@/shared/utils/formatPrice';
+import ProductDescription from './ProductDescription';
 import dotIcon from './assets/dot.svg';
 import starIcon from './assets/star.svg';
 import dashedLine from './assets/dashed-line.svg';
@@ -15,9 +15,6 @@ type ProductInfoProps = {
 const LOW_STOCK = 5;
 
 function ProductInfo({ product, selection: { selection, select, isAvailable, variant, stock, price, salePrice } }: ProductInfoProps) {
-  // BE description is merchant HTML: sanitize before injecting
-  const description = DOMPurify.sanitize(product.descriptionHtml);
-
   return (
     <div className="flex flex-col gap-[38px] font-clash lg:w-[520px] lg:shrink-0">
       <div className="flex flex-col gap-12 lg:gap-14">
@@ -62,10 +59,7 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
           <div className="flex flex-col gap-8 lg:gap-10">
             <div className="flex flex-col gap-2.5">
               <h2 className="font-raleway text-lg font-bold leading-[1.2] text-[#292929] lg:text-xl">Description:</h2>
-              <div
-                className="text-sm leading-[1.3] text-[#666] lg:text-base [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
-                dangerouslySetInnerHTML={{ __html: description }}
-              />
+              <ProductDescription html={product.descriptionHtml} />
             </div>
 
             {product.options.map((option) => {
