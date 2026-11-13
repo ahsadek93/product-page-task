@@ -1,14 +1,17 @@
 import DOMPurify from 'dompurify';
-import type { Product, ProductOption } from '@/features/product/types/product';
+import type { Product } from '@/features/product/types/product';
+import type { VariantSelection } from '@/features/product/hooks/useVariantSelection';
 import { formatPrice } from '@/shared/utils/formatPrice';
 import dotIcon from './assets/dot.svg';
 import starIcon from './assets/star.svg';
 import dashedLine from './assets/dashed-line.svg';
 
-// ponytail: first value shown as selected; real selection + variant pricing is the next step
-const selectedOf = (option: ProductOption) => option.values[0]?.name;
+type ProductInfoProps = {
+  product: Product;
+  selection: VariantSelection;
+};
 
-function ProductInfo({ product }: { product: Product }) {
+function ProductInfo({ product, selection: { selection, select, isAvailable, variant, price, salePrice } }: ProductInfoProps) {
   // BE description is merchant HTML: sanitize before injecting
   const description = DOMPurify.sanitize(product.descriptionHtml);
 
@@ -28,11 +31,11 @@ function ProductInfo({ product }: { product: Product }) {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 leading-[1.2]">
-                  {product.salePrice !== null && (
-                    <s className="text-sm font-medium text-[#666] lg:text-lg">{formatPrice(product.price)}</s>
+                  {salePrice !== null && (
+                    <s className="text-sm font-medium text-[#666] lg:text-lg">{formatPrice(price)}</s>
                   )}
                   <span className="text-xl font-semibold text-[#141414] lg:text-[28px]">
-                    {formatPrice(product.salePrice ?? product.price)}
+                    {formatPrice(salePrice ?? price)}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 leading-none lg:gap-2">
@@ -63,7 +66,7 @@ function ProductInfo({ product }: { product: Product }) {
             </div>
 
             {product.options.map((option) => {
-              const selected = selectedOf(option);
+              const selected = selection[option.name];
               return (
                 <div key={option.name} className="flex flex-col gap-[18px]">
                   <div className="flex items-center justify-between leading-[1.2]">
@@ -85,7 +88,9 @@ function ProductInfo({ product }: { product: Product }) {
                           type="button"
                           aria-label={value.name}
                           aria-pressed={value.name === selected}
-                          className="h-10 flex-1 overflow-hidden rounded-md border border-transparent bg-white aria-pressed:border-[#141414] aria-pressed:p-[5px] lg:w-[75px] lg:flex-none lg:rounded-lg"
+                          disabled={!isAvailable(option.name, value.name)}
+                          onClick={() => select(option.name, value.name)}
+                          className="h-10 flex-1 overflow-hidden disabled:cursor-not-allowed disabled:opacity-40 rounded-md border border-transparent bg-white aria-pressed:border-[#141414] aria-pressed:p-[5px] lg:w-[75px] lg:flex-none lg:rounded-lg"
                         >
                           <img src={value.image} alt="" className="size-full rounded object-cover" />
                         </button>
@@ -98,7 +103,9 @@ function ProductInfo({ product }: { product: Product }) {
                           key={value.id}
                           type="button"
                           aria-pressed={value.name === selected}
-                          className="h-10 rounded-md border border-[#e6e6e6] text-xl font-semibold leading-[1.2] text-[#525252] aria-pressed:border-[#333] aria-pressed:bg-[#ebebeb] aria-pressed:text-[#141414] lg:rounded-lg"
+                          disabled={!isAvailable(option.name, value.name)}
+                          onClick={() => select(option.name, value.name)}
+                          className="h-10 rounded-md border border-[#e6e6e6] disabled:cursor-not-allowed disabled:text-[#b8b8b8] disabled:line-through text-xl font-semibold leading-[1.2] text-[#525252] aria-pressed:border-[#333] aria-pressed:bg-[#ebebeb] aria-pressed:text-[#141414] lg:rounded-lg"
                         >
                           {value.name}
                         </button>
@@ -115,7 +122,8 @@ function ProductInfo({ product }: { product: Product }) {
         <div className="flex flex-col items-start gap-[18px] text-lg leading-[1.2] lg:flex-row lg:gap-6 lg:text-xl">
           <button
             type="button"
-            className="w-[296px] rounded-md bg-[#141414] py-[17px] font-semibold text-white lg:rounded-lg"
+            disabled={product.variants.length > 0 && !variant}
+            className="w-[296px] rounded-md bg-[#141414] py-[17px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg"
           >
             Add To Cart
           </button>
