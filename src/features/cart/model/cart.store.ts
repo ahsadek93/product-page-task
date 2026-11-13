@@ -6,7 +6,8 @@ import type { CartItem } from '@/features/cart/types/cart';
 type CartState = {
   items: CartItem[];
   isOpen: boolean; // drawer; not persisted
-  lastAdded: { item: CartItem; id: number } | null; // drives the "added" toast; id changes on every add
+  // Drives the toast; id changes on every add. `added` is how many actually went in (0 = already at the stock cap).
+  lastAdded: { item: CartItem; id: number; added: number } | null;
   add: (item: CartItem) => void;
   setQuantity: (variantId: string, quantity: number) => void;
   remove: (variantId: string) => void;
@@ -27,9 +28,11 @@ export const useCartStore = create<CartState>()(
       add: (item) =>
         set((s) => {
           const line = s.items.find((i) => i.variantId === item.variantId);
-          if (line) line.quantity = clamp(line, line.quantity + item.quantity);
-          else s.items.push({ ...item, quantity: clamp(item, item.quantity) });
-          s.lastAdded = { item, id: (s.lastAdded?.id ?? 0) + 1 };
+          const before = line?.quantity ?? 0;
+          const quantity = clamp(line ?? item, before + item.quantity);
+          if (line) line.quantity = quantity;
+          else s.items.push({ ...item, quantity });
+          s.lastAdded = { item, id: (s.lastAdded?.id ?? 0) + 1, added: quantity - before };
         }),
       setQuantity: (variantId, quantity) =>
         set((s) => {

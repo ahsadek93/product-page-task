@@ -65,6 +65,25 @@ describe('add', () => {
   });
 });
 
+describe('add: lastAdded.added', () => {
+  it('is the quantity that actually went in', () => {
+    cart().add(item('a', 2));
+    assert.equal(cart().lastAdded?.added, 2);
+  });
+
+  it('is cut down when the stock cap is reached', () => {
+    cart().add(item('a', 2, 100, 3));
+    cart().add(item('a', 2, 100, 3));
+    assert.equal(cart().lastAdded?.added, 1);
+  });
+
+  it('is 0 when the line is already at the cap', () => {
+    cart().add(item('a', 3, 100, 3));
+    cart().add(item('a', 1, 100, 3));
+    assert.equal(cart().lastAdded?.added, 0);
+  });
+});
+
 describe('setQuantity', () => {
   it('sets the quantity', () => {
     cart().add(item('a'));

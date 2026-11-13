@@ -34,6 +34,8 @@ function CartToast() {
   if (isOpen && visible) setVisible(false);
 
   const item = lastAdded?.item;
+  // Nothing went in: the line was already at its stock cap, so say that instead of "Added".
+  const capped = lastAdded?.added === 0;
   const options = item ? Object.values(item.options).join(' / ') : '';
 
   return (
@@ -59,15 +61,15 @@ function CartToast() {
                 height="16"
                 viewBox="0 0 16 16"
                 fill="none"
-                stroke="#12b76a"
+                stroke={capped ? '#f79009' : '#12b76a'}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 aria-hidden="true"
               >
-                <path d="M3 8.5l3 3 7-7" />
+                {capped ? <path d="M8 3.5v5.5M8 12.5v.01" /> : <path d="M3 8.5l3 3 7-7" />}
               </svg>
-              Added to cart
+              {capped ? `Only ${item?.maxQuantity} available, all in your cart` : 'Added to cart'}
             </p>
             <p className="truncate text-sm font-medium capitalize text-[#b8b8b8]">
               {item?.name}
