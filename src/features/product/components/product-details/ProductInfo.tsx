@@ -22,16 +22,23 @@ function ProductInfo({
   selection: { selection, select, isAvailable, stock, price, salePrice },
   cart: { canAddToCart, addToCart, checkoutNow },
 }: ProductInfoProps) {
+  const quantity = stock ? stock.quantity : Infinity; // null stock = not tracked
+  // Dedupe by name: the API can list two categories with the same name (different slugs).
+  const categories = [...new Set(product.categories.map((c) => c.name))];
+
   return (
     <div className="flex flex-col gap-[38px] font-clash md:w-[46%] md:shrink-0 lg:w-[520px]">
-      <div className="flex flex-col gap-12 lg:gap-14">
+      <div className="flex flex-col gap-8 lg:gap-10">
         <div className="flex flex-col gap-6 lg:gap-7">
           {/* Heading, price, rating */}
           <div className="flex flex-col gap-7">
             <div className="flex flex-col gap-3.5 lg:gap-5">
               <div className="flex flex-col gap-2 leading-[1.2] lg:gap-3">
-                {/* ponytail: brand, sold count and rating aren't in the API; static Figma values until reviews are wired */}
-                <p className="text-[13px] font-medium tracking-[0.01em] text-[#8f8f8f] lg:text-base">John Lewis ANYDAY</p>
+                {/* Figma shows a brand here; the API has none, so the first category fills the slot.
+                    ponytail: sold count and rating below are static Figma values — the API has no sales or review data */}
+                {categories[0] && (
+                  <p className="text-[13px] font-medium capitalize tracking-[0.01em] text-[#8f8f8f] lg:text-base">{categories[0]}</p>
+                )}
                 <h1 className="text-[23px] font-semibold tracking-[-0.005em] text-[#292929] lg:text-4xl">
                   {product.name}
                 </h1>
@@ -124,26 +131,24 @@ function ProductInfo({
               );
             })}
 
-            {/* Stock: hidden when the store doesn't track it */}
-            {stock && (
-              <p role="status" className="flex items-center gap-2 text-base font-medium leading-[1.2] lg:text-lg">
-                <span
-                  aria-hidden="true"
-                  className={`size-2 rounded-full ${
-                    stock.quantity === 0 ? 'bg-[#d92d20]' : stock.quantity <= LOW_STOCK ? 'bg-[#f79009]' : 'bg-[#12b76a]'
-                  }`}
-                />
-                <span className="text-[#292929]">
-                  {stock.quantity === 0
-                    ? stock.canOrder
-                      ? 'Out of stock, available to order'
-                      : 'Out of stock'
-                    : stock.quantity <= LOW_STOCK
-                      ? `Only ${stock.quantity} left`
-                      : 'In stock'}
-                </span>
-              </p>
-            )}
+            {/* Stock: untracked stores are always orderable, so they read as "In stock" */}
+            <p role="status" className="flex items-center gap-2 text-base font-medium leading-[1.2] lg:text-lg">
+              <span
+                aria-hidden="true"
+                className={`size-2 rounded-full ${
+                  quantity === 0 ? 'bg-[#d92d20]' : quantity <= LOW_STOCK ? 'bg-[#f79009]' : 'bg-[#12b76a]'
+                }`}
+              />
+              <span className="text-[#292929]">
+                {quantity === 0
+                  ? stock?.canOrder
+                    ? 'Out of stock, available to order'
+                    : 'Out of stock'
+                  : quantity <= LOW_STOCK
+                    ? `Only ${quantity} left`
+                    : 'In stock'}
+              </span>
+            </p>
           </div>
         </div>
 
@@ -167,6 +172,20 @@ function ProductInfo({
           </button>
         </div>
       </div>
+
+      {/* Not in Figma: placed below the CTA so the designed layout stays intact */}
+      {categories.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 leading-[1.2]">
+          <span className="text-base font-medium text-[#8f8f8f]">Categories:</span>
+          <ul className="flex flex-wrap gap-2">
+            {categories.map((name) => (
+              <li key={name} className="rounded-md border border-[#e6e6e6] px-3 py-1.5 text-sm font-medium capitalize text-[#525252]">
+                {name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <button type="button" className="hidden self-start text-base font-medium leading-[1.2] text-[#7a7a7a] underline lg:block">
         Delivery T&amp;C
