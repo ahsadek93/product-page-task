@@ -6,6 +6,11 @@
   box-sizing: border-box;
 }
 
+/* Reserve the scrollbar's space so content doesn't shift when the page becomes scrollable. */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
   font-family: 'Clash Grotesk', sans-serif;
