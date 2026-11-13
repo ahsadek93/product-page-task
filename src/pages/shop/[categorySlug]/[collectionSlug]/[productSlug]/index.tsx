@@ -35,7 +35,13 @@ function ProductPage() {
         ]}
       />
       <div className="mt-6 lg:mt-10">
-        {isPending ? <ProductDetailsSkeleton /> : isError ? <ProductError /> : <ProductDetails product={product} />}
+        {isPending ? (
+          <ProductDetailsSkeleton />
+        ) : isError ? (
+          <ProductError />
+        ) : (
+          <ProductDetails key={product.id} product={product} />
+        )}
       </div>
       <Divider />
       <ProductGrid title="Related Product" />
