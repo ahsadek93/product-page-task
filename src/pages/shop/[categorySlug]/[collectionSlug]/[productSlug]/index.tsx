@@ -1,9 +1,18 @@
+import { useParams } from 'react-router';
 import Breadcrumb from '../../../../../shared/components/breadcrumb/Breadcrumb';
 import ProductDetails from '../../../../../features/product/components/product-details/ProductDetails';
 import RelatedProducts from '../../../../../features/product/components/related-products/RelatedProducts';
 import ProductReviews from '../../../../../features/product/components/product-reviews/ProductReviews';
+import { useProduct } from '../../../../../features/product/hooks/useProduct';
 
 function ProductPage() {
+  const { productSlug = '' } = useParams();
+  const { isPending, isError } = useProduct(productSlug);
+
+  // ponytail: plain text states, skeletons when the design has them
+  if (isPending) return <p className="p-8 text-center">Loading…</p>;
+  if (isError) return <p className="p-8 text-center">Couldn't load this product.</p>;
+
   // ponytail: sample labels until product data is wired in; middle crumbs are text, no category/collection pages exist
   return (
     <div className="mx-auto max-w-[1240px] px-5 py-6">
