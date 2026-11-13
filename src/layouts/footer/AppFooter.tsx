@@ -28,7 +28,13 @@ function AppFooter() {
       <div className="mx-auto max-w-[1240px] px-5">
         <div className="flex flex-col gap-12 md:flex-row md:justify-between md:gap-10">
           <div className="w-[310px]">
-            <img src={logo} alt="John Lewis & Partners" loading="lazy" decoding="async" className="h-8 w-[170px] object-cover" />
+            <img
+              src={logo}
+              alt="John Lewis & Partners"
+              loading="lazy"
+              decoding="async"
+              className="h-8 w-[170px] object-cover"
+            />
 
             <form className="mt-10 w-[298px]" onSubmit={(e) => e.preventDefault()}>
               <div className="flex items-center justify-between">

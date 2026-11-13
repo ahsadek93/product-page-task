@@ -2,15 +2,47 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import type { Product, ProductVariant } from '@/features/product/types/product';
-import { defaultSelection, findVariant, nextSelection, priceOf, stockOf, toCartItem, unavailableReason } from './variant.ts';
+import {
+  defaultSelection,
+  findVariant,
+  nextSelection,
+  priceOf,
+  stockOf,
+  toCartItem,
+  unavailableReason,
+} from './variant.ts';
 
-const v = (id: string, options: Record<string, string>, price = 100, salePrice: number | null = null, quantity = 1): ProductVariant =>
-  ({ id, price, salePrice, quantity, options });
-const opt = (name: string, values: string[]) => ({ name, type: 'button' as const, values: values.map((n) => ({ id: n, name: n })) });
+const v = (
+  id: string,
+  options: Record<string, string>,
+  price = 100,
+  salePrice: number | null = null,
+  quantity = 1,
+): ProductVariant => ({ id, price, salePrice, quantity, options });
+const opt = (name: string, values: string[]) => ({
+  name,
+  type: 'button' as const,
+  values: values.map((n) => ({ id: n, name: n })),
+});
 
-const variants = [v('a', { color: 'red', size: '38' }), v('b', { color: 'red', size: '40' }), v('c', { color: 'blue', size: '38' })];
+const variants = [
+  v('a', { color: 'red', size: '38' }),
+  v('b', { color: 'red', size: '40' }),
+  v('c', { color: 'blue', size: '38' }),
+];
 const product = (over: Partial<Product> = {}) =>
-  ({ id: 'p', price: 190, salePrice: 160, images: [], variants, options: [opt('color', ['red'])], trackStock: false, blockOrdersWhenOutOfStock: false, quantity: 0, ...over }) as Product;
+  ({
+    id: 'p',
+    price: 190,
+    salePrice: 160,
+    images: [],
+    variants,
+    options: [opt('color', ['red'])],
+    trackStock: false,
+    blockOrdersWhenOutOfStock: false,
+    quantity: 0,
+    ...over,
+  }) as Product;
 
 // Trap: brown only in 38, black only in 40. Options ordered color → size.
 const brown38 = { color: 'brown', size: '38' };
@@ -25,7 +57,11 @@ const stocked = (over: Partial<Product> = {}) =>
     options: trap.options,
     trackStock: true,
     blockOrdersWhenOutOfStock: true,
-    variants: [v('b38', brown38, 100, null, 0), v('b40', { color: 'brown', size: '40' }), v('k38', { color: 'black', size: '38' }, 100, null, 0)],
+    variants: [
+      v('b38', brown38, 100, null, 0),
+      v('b40', { color: 'brown', size: '40' }),
+      v('k38', { color: 'black', size: '38' }, 100, null, 0),
+    ],
     ...over,
   });
 
@@ -112,7 +148,10 @@ describe('nextSelection', () => {
   });
 
   it('moves off a sold-out combination to an orderable one', () => {
-    assert.deepEqual(nextSelection(stocked(), { color: 'black', size: '38' }, 'color', 'brown'), { color: 'brown', size: '40' });
+    assert.deepEqual(nextSelection(stocked(), { color: 'black', size: '38' }, 'color', 'brown'), {
+      color: 'brown',
+      size: '40',
+    });
   });
 
   it('accepts any pick when there are no variants', () => {
@@ -121,7 +160,8 @@ describe('nextSelection', () => {
 });
 
 describe('stockOf', () => {
-  const tracked = (over: Partial<Product> = {}) => product({ trackStock: true, blockOrdersWhenOutOfStock: true, quantity: 7, ...over });
+  const tracked = (over: Partial<Product> = {}) =>
+    product({ trackStock: true, blockOrdersWhenOutOfStock: true, quantity: 7, ...over });
 
   it('returns null when stock is not tracked', () => {
     assert.equal(stockOf(product({ trackStock: false }), v('x', {})), null);
@@ -133,7 +173,10 @@ describe('stockOf', () => {
 
   it('blocks ordering at 0 only when the store says so', () => {
     assert.deepEqual(stockOf(tracked(), v('x', {}, 100, null, 0)), { quantity: 0, canOrder: false });
-    assert.deepEqual(stockOf(tracked({ blockOrdersWhenOutOfStock: false }), v('x', {}, 100, null, 0)), { quantity: 0, canOrder: true });
+    assert.deepEqual(stockOf(tracked({ blockOrdersWhenOutOfStock: false }), v('x', {}, 100, null, 0)), {
+      quantity: 0,
+      canOrder: true,
+    });
   });
 
   it("uses the product's quantity when there are no variants", () => {
@@ -147,18 +190,29 @@ describe('stockOf', () => {
 
 describe('toCartItem', () => {
   const shoe = product({
-    id: 'p', name: 'Shoe', images: ['main.jpg'],
+    id: 'p',
+    name: 'Shoe',
+    images: ['main.jpg'],
     options: [{ name: 'color', type: 'image', values: [{ id: '1', name: 'red', image: 'red.jpg' }] }],
   });
 
   it("snapshots the charged price, the selected swatch image and the variant's options", () => {
     assert.deepEqual(toCartItem(shoe, { color: 'red', size: '40' }, variants[1]), {
-      variantId: 'b', name: 'Shoe', image: 'red.jpg', price: 100, options: { color: 'red', size: '40' }, quantity: 1, maxQuantity: null,
+      variantId: 'b',
+      name: 'Shoe',
+      image: 'red.jpg',
+      price: 100,
+      options: { color: 'red', size: '40' },
+      quantity: 1,
+      maxQuantity: null,
     });
   });
 
   it('caps quantity at variant stock when orders are blocked', () => {
-    assert.equal(toCartItem({ ...shoe, trackStock: true, blockOrdersWhenOutOfStock: true }, {}, variants[1]).maxQuantity, 1);
+    assert.equal(
+      toCartItem({ ...shoe, trackStock: true, blockOrdersWhenOutOfStock: true }, {}, variants[1]).maxQuantity,
+      1,
+    );
   });
 
   it('falls back to the product id and main image when there is no variant', () => {

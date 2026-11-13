@@ -48,7 +48,9 @@ function ProductInfo({
                 {/* Figma shows a brand here; the API has none, so the first category fills the slot.
                     ponytail: sold count and rating below are static Figma values — the API has no sales or review data */}
                 {categories[0] && (
-                  <p className="text-[13px] font-medium capitalize tracking-[0.01em] text-[#8f8f8f] lg:text-base">{categories[0]}</p>
+                  <p className="text-[13px] font-medium capitalize tracking-[0.01em] text-[#8f8f8f] lg:text-base">
+                    {categories[0]}
+                  </p>
                 )}
                 <h1 className="text-[23px] font-semibold tracking-[-0.005em] text-[#292929] lg:text-4xl">
                   {product.name}
@@ -123,7 +125,10 @@ function ProductInfo({
                           {value.image ? (
                             <img src={value.image} alt="" className="size-full object-cover" />
                           ) : cssColor(option, value.name) ? (
-                            <span className="block size-full border border-black/10 [border-radius:inherit]" style={{ backgroundColor: value.name }} />
+                            <span
+                              className="block size-full border border-black/10 [border-radius:inherit]"
+                              style={{ backgroundColor: value.name }}
+                            />
                           ) : (
                             <span className="flex size-full items-center justify-center border border-[#e6e6e6] text-sm font-semibold capitalize text-[#525252] [border-radius:inherit]">
                               {value.name}
@@ -201,7 +206,10 @@ function ProductInfo({
           <span className="text-base font-medium text-[#8f8f8f]">Categories:</span>
           <ul className="flex flex-wrap gap-2">
             {categories.map((name) => (
-              <li key={name} className="rounded-md border border-[#e6e6e6] px-3 py-1.5 text-sm font-medium capitalize text-[#525252]">
+              <li
+                key={name}
+                className="rounded-md border border-[#e6e6e6] px-3 py-1.5 text-sm font-medium capitalize text-[#525252]"
+              >
                 {name}
               </li>
             ))}
@@ -209,7 +217,10 @@ function ProductInfo({
         </div>
       )}
 
-      <button type="button" className="hidden self-start text-base font-medium leading-[1.2] text-[#7a7a7a] underline lg:block">
+      <button
+        type="button"
+        className="hidden self-start text-base font-medium leading-[1.2] text-[#7a7a7a] underline lg:block"
+      >
         Delivery T&amp;C
       </button>
     </div>

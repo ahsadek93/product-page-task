@@ -25,8 +25,22 @@ function CartDrawer() {
             <DialogTitle className="text-2xl font-semibold leading-[1.2] text-[#141414]">
               Your Cart {count > 0 && <span className="text-[#8f8f8f]">({count})</span>}
             </DialogTitle>
-            <button type="button" aria-label="Close cart" onClick={close} className="-m-2 p-2 text-[#525252] hover:text-[#141414]">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+            <button
+              type="button"
+              aria-label="Close cart"
+              onClick={close}
+              className="-m-2 p-2 text-[#525252] hover:text-[#141414]"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
                 <path d="M4 4l12 12M16 4L4 16" />
               </svg>
             </button>
@@ -72,7 +86,10 @@ function CartDrawer() {
                   <p className="text-sm font-medium text-[#8f8f8f]">Shipping calculated at checkout.</p>
                 </div>
                 <div className="flex flex-col gap-3 text-lg leading-[1.2]">
-                  <button type="button" className="w-full rounded-md bg-[#141414] py-[17px] font-semibold text-white lg:rounded-lg">
+                  <button
+                    type="button"
+                    className="w-full rounded-md bg-[#141414] py-[17px] font-semibold text-white lg:rounded-lg"
+                  >
                     Checkout Now
                   </button>
                   <button

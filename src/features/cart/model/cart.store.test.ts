@@ -13,8 +13,15 @@ const localStorage = {
 Object.assign(globalThis, { window: { localStorage } });
 const { cartCount, cartSubtotal, useCartStore } = await import('./cart.store.ts');
 
-const item = (variantId: string, quantity = 1, price = 100, maxQuantity: number | null = null): CartItem =>
-  ({ variantId, name: 'Shoe', image: '', price, options: {}, quantity, maxQuantity });
+const item = (variantId: string, quantity = 1, price = 100, maxQuantity: number | null = null): CartItem => ({
+  variantId,
+  name: 'Shoe',
+  image: '',
+  price,
+  options: {},
+  quantity,
+  maxQuantity,
+});
 const cart = useCartStore.getState;
 const lines = () => cart().items.map((i) => [i.variantId, i.quantity]);
 
@@ -27,7 +34,10 @@ describe('add', () => {
   it('adds a new variant as a new line', () => {
     cart().add(item('a'));
     cart().add(item('b', 2));
-    assert.deepEqual(lines(), [['a', 1], ['b', 2]]);
+    assert.deepEqual(lines(), [
+      ['a', 1],
+      ['b', 2],
+    ]);
   });
 
   it('merges the same variant into one line', () => {
@@ -112,7 +122,10 @@ describe('persistence', () => {
     cart().setOpen(true);
     const { state } = JSON.parse(saved.get('cart')!);
     assert.deepEqual(Object.keys(state), ['items']);
-    assert.deepEqual(state.items.map((i: CartItem) => [i.variantId, i.quantity]), [['a', 2]]);
+    assert.deepEqual(
+      state.items.map((i: CartItem) => [i.variantId, i.quantity]),
+      [['a', 2]],
+    );
   });
 
   it('restores items from storage on rehydrate', async () => {

@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import type { Product } from '@/features/product/types/product';
-import { defaultSelection, findVariant, unavailableReason, nextSelection, priceOf, stockOf } from '@/features/product/model/variant';
+import {
+  defaultSelection,
+  findVariant,
+  unavailableReason,
+  nextSelection,
+  priceOf,
+  stockOf,
+} from '@/features/product/model/variant';
 
 export function useVariantSelection(product: Product) {
   const [selection, setSelection] = useState(() => defaultSelection(product));

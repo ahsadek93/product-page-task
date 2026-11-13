@@ -14,10 +14,35 @@ import bottomLine from './assets/line-bottom.svg';
 
 // ponytail: static Figma content and fixed selections, become props when reviews are fetched
 const reviews: Review[] = [
-  { title: 'This is amazing product I have.', date: 'July 2, 2020 03:29 PM', author: 'Darrell Steward', avatar: avatar1, likes: 128, liked: true },
-  { title: 'This is amazing product I have.', date: 'July 2, 2020 1:04 PM', author: 'Darlene Robertson', avatar: avatar2, likes: 82 },
-  { title: 'This is amazing product I have.', date: 'June 26, 2020 10:03 PM', author: 'Kathryn Murphy', avatar: avatar3, likes: 9 },
-  { title: 'This is amazing product I have.', date: 'July 7, 2020 10:14 AM', author: 'Ronald Richards', avatar: avatar4, likes: 124 },
+  {
+    title: 'This is amazing product I have.',
+    date: 'July 2, 2020 03:29 PM',
+    author: 'Darrell Steward',
+    avatar: avatar1,
+    likes: 128,
+    liked: true,
+  },
+  {
+    title: 'This is amazing product I have.',
+    date: 'July 2, 2020 1:04 PM',
+    author: 'Darlene Robertson',
+    avatar: avatar2,
+    likes: 82,
+  },
+  {
+    title: 'This is amazing product I have.',
+    date: 'June 26, 2020 10:03 PM',
+    author: 'Kathryn Murphy',
+    avatar: avatar3,
+    likes: 9,
+  },
+  {
+    title: 'This is amazing product I have.',
+    date: 'July 7, 2020 10:14 AM',
+    author: 'Ronald Richards',
+    avatar: avatar4,
+    likes: 124,
+  },
 ];
 const tabs = ['All Reviews', 'With Photo & Video', 'With Description'];
 const pages = ['1', '2', '...', '19'];

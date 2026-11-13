@@ -12,8 +12,7 @@ export type Review = {
   liked?: boolean;
 };
 
-const actionClass =
-  'flex h-8 items-center justify-center rounded-md border border-[#e4e9ee] lg:h-[50px] lg:rounded-lg';
+const actionClass = 'flex h-8 items-center justify-center rounded-md border border-[#e4e9ee] lg:h-[50px] lg:rounded-lg';
 
 // Mobile: buttons share the author row. Desktop: buttons sit bottom-right of the whole review.
 function ReviewItem({ review }: { review: Review }) {

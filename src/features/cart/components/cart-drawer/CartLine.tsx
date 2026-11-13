@@ -30,7 +30,12 @@ function CartLine({ item, onQuantity, onRemove }: CartLineProps) {
 
         <div className="flex items-center justify-between">
           <div className="flex items-center overflow-hidden rounded-md border border-[#e6e6e6]">
-            <button type="button" aria-label={`Decrease ${item.name} quantity`} onClick={() => onQuantity(item.quantity - 1)} className={stepper}>
+            <button
+              type="button"
+              aria-label={`Decrease ${item.name} quantity`}
+              onClick={() => onQuantity(item.quantity - 1)}
+              className={stepper}
+            >
               −
             </button>
             <span aria-live="polite" className="w-8 text-center text-base font-semibold text-[#141414]">
@@ -46,7 +51,11 @@ function CartLine({ item, onQuantity, onRemove }: CartLineProps) {
               +
             </button>
           </div>
-          <button type="button" onClick={onRemove} className="text-sm font-medium text-[#7a7a7a] underline hover:text-[#141414]">
+          <button
+            type="button"
+            onClick={onRemove}
+            className="text-sm font-medium text-[#7a7a7a] underline hover:text-[#141414]"
+          >
             Remove
           </button>
         </div>

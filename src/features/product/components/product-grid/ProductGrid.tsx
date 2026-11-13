@@ -8,12 +8,47 @@ import dashedLine from './assets/line.svg';
 
 // ponytail: static Figma content, becomes props when related products are fetched
 const products: ProductCardItem[] = [
-  { image: product1, brand: 'Whistle', price: '$26', name: 'Wide Leg Cropped Jeans, Denim', rating: '4,8', sold: '1,238' },
-  { image: product2, brand: 'John Lewis ANYDAY', price: '$26', name: 'Long Sleeve Utility Shirt, Navy, 6', rating: '4,8', sold: '1,238' },
-  { image: product3, brand: 'John Lewis ANYDAY', price: '$32', name: 'Stripe Curved Hem Shirt, Blue', rating: '4,5', sold: '620' },
-  { image: product4, brand: 'John Lewis ANYDAY', price: '$40', name: 'Denim Overshirt, Mid Wash', rating: '4,6', sold: '238' },
+  {
+    image: product1,
+    brand: 'Whistle',
+    price: '$26',
+    name: 'Wide Leg Cropped Jeans, Denim',
+    rating: '4,8',
+    sold: '1,238',
+  },
+  {
+    image: product2,
+    brand: 'John Lewis ANYDAY',
+    price: '$26',
+    name: 'Long Sleeve Utility Shirt, Navy, 6',
+    rating: '4,8',
+    sold: '1,238',
+  },
+  {
+    image: product3,
+    brand: 'John Lewis ANYDAY',
+    price: '$32',
+    name: 'Stripe Curved Hem Shirt, Blue',
+    rating: '4,5',
+    sold: '620',
+  },
+  {
+    image: product4,
+    brand: 'John Lewis ANYDAY',
+    price: '$40',
+    name: 'Denim Overshirt, Mid Wash',
+    rating: '4,6',
+    sold: '238',
+  },
   { image: product5, brand: 'John Lewis', price: '$79', name: 'Linen Blazer, Navy', rating: '4,8', sold: '1,238' },
-  { image: product2, brand: 'John Lewis ANYDAY', price: '$26', name: 'Long Sleeve Utility Shirt, Navy, 6', rating: '4,8', sold: '1,238' },
+  {
+    image: product2,
+    brand: 'John Lewis ANYDAY',
+    price: '$26',
+    name: 'Long Sleeve Utility Shirt, Navy, 6',
+    rating: '4,8',
+    sold: '1,238',
+  },
 ];
 
 // Figma: 6 cards in 2 columns on mobile, 5 in one row on desktop.

@@ -6,7 +6,8 @@ export type Selection = Record<string, string>; // { color: 'brown', size: '40' 
 const matches = (v: ProductVariant, selection: Selection) =>
   Object.entries(selection).every(([name, value]) => v.options[name] === value);
 
-export const findVariant = (variants: ProductVariant[], selection: Selection) => variants.find((v) => matches(v, selection));
+export const findVariant = (variants: ProductVariant[], selection: Selection) =>
+  variants.find((v) => matches(v, selection));
 
 // Out of stock only blocks a variant when the store tracks stock AND refuses orders without it.
 const orderable = (product: Product, v: ProductVariant) =>
@@ -66,7 +67,12 @@ export const priceOf = (product: Product, variant?: ProductVariant) => {
 };
 
 // Snapshot for the cart: the selected color's swatch beats the generic first image.
-export const toCartItem = (product: Product, selection: Selection, variant: ProductVariant | undefined, quantity = 1): CartItem => {
+export const toCartItem = (
+  product: Product,
+  selection: Selection,
+  variant: ProductVariant | undefined,
+  quantity = 1,
+): CartItem => {
   const { price, salePrice } = priceOf(product, variant);
   const imageOption = product.options.find((o) => o.type === 'image');
   const swatch = imageOption?.values.find((v) => v.name === selection[imageOption.name])?.image;
