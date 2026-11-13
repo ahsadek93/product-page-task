@@ -24,10 +24,10 @@ const COLUMNS = [
 
 function AppFooter() {
   return (
-    <footer className="bg-[#f2f2f2] pb-8 pt-[62px] font-clash lg:pt-[72px]">
+    <footer className="bg-[#f2f2f2] pb-[22px] pt-[62px] font-clash lg:pb-[27px] lg:pt-[72px]">
       <div className="mx-auto max-w-[1240px] px-5">
         <div className="flex flex-col gap-12 md:flex-row md:justify-between md:gap-10">
-          <div className="w-[310px]">
+          <div className="w-full max-w-[310px]">
             <img
               src={logo}
               alt="John Lewis & Partners"
@@ -36,13 +36,13 @@ function AppFooter() {
               className="h-8 w-[170px] object-cover"
             />
 
-            <form className="mt-10 w-[298px]" onSubmit={(e) => e.preventDefault()}>
+            <form className="mt-10 w-full max-w-[298px]" onSubmit={(e) => e.preventDefault()}>
               <div className="flex items-center justify-between">
                 <input
                   type="email"
                   aria-label="Email"
                   placeholder="Get latest offers to your inbox"
-                  className="w-full min-w-0 border-0 bg-transparent p-0 text-base font-medium leading-[1.6] tracking-[0.16px] text-[#141414] placeholder:text-[#787a7c] focus:ring-0"
+                  className="w-full min-w-0 border-0 bg-transparent p-0 text-base font-medium leading-[1.6] tracking-[0.16px] text-[#141414] placeholder:text-[#787a7c]"
                 />
                 <button
                   type="submit"
@@ -52,7 +52,7 @@ function AppFooter() {
                   <img src={arrowIcon} alt="" width={20} height={20} className="-rotate-90 -scale-y-100" />
                 </button>
               </div>
-              <img src={underline} alt="" className="block h-px w-[298px]" />
+              <img src={underline} alt="" className="block h-px w-full" />
             </form>
 
             <div className="mt-6 flex gap-4 lg:mt-5">
@@ -75,10 +75,10 @@ function AppFooter() {
                 <h3 className="h-[22px] text-lg font-medium leading-6 text-[#121212] lg:text-sm lg:font-semibold">
                   {title}
                 </h3>
-                <ul className="flex flex-col gap-3">
+                <ul className="flex flex-col gap-3 text-sm leading-[22px]">
                   {links.map((link) => (
                     <li key={link}>
-                      <a href="#" className="text-sm leading-[22px] text-[#3e3e59] lg:text-[#141414]">
+                      <a href="#" className="text-[#3e3e59] lg:text-[#141414]">
                         {link}
                       </a>
                     </li>
@@ -89,7 +89,7 @@ function AppFooter() {
           </div>
         </div>
 
-        <img src={divider} alt="" className="mt-12 block h-px w-full lg:hidden" />
+        <img src={divider} alt="" className="mt-[33px] block h-px w-full lg:hidden" />
         <div className="flex flex-col gap-6 pt-9 lg:mt-[72px] lg:flex-row lg:items-start lg:justify-between lg:border-t lg:border-dashed lg:border-[#a3a3a3] lg:pt-6">
           <p className="text-sm leading-[22px] text-[#3e3e59]">© John Lewis plc 2001 - 2024</p>
 
