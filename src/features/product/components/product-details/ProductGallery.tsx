@@ -10,7 +10,7 @@ type ProductGalleryProps = {
 
 // Hover darkens (mouse devices only, via hoverOnlyWhenSupported), press shrinks slightly.
 const actionClass =
-  'rounded-md bg-[#f2f2f2] p-3 motion-safe:transition motion-safe:duration-200 motion-safe:ease-out active:scale-95 hover:bg-[#e4e4e4] lg:rounded-lg lg:p-4';
+  'rounded-md bg-surface p-3 motion-safe:transition motion-safe:duration-200 motion-safe:ease-out active:scale-95 hover:bg-[#e4e4e4] lg:rounded-lg lg:p-4';
 
 // Mobile: thumbnails span under image + action column. Desktop: thumbnails sit under the image only.
 function ProductGallery({ images, name }: ProductGalleryProps) {
@@ -38,7 +38,7 @@ function ProductGallery({ images, name }: ProductGalleryProps) {
 
   return (
     <div className="grid grid-cols-[1fr_44px] gap-x-3 gap-y-5 md:sticky md:top-[99px] md:min-w-0 md:max-w-[545px] md:flex-1 lg:top-[121px] lg:grid-cols-[minmax(0,458px)_52px] lg:gap-x-[35px] lg:gap-y-6">
-      <div className="aspect-[458/610] overflow-hidden rounded-lg bg-[#f2f2f2]">
+      <div className="aspect-[458/610] overflow-hidden rounded-lg bg-surface">
         {/* Hover zooms on mouse devices, click/tap toggles zoom everywhere. No images → empty grey box. */}
         {images.length > 0 && (
           <button
@@ -95,7 +95,7 @@ function ProductGallery({ images, name }: ProductGalleryProps) {
                 aria-label={`View image ${i + 1}`}
                 aria-current={i === active}
                 onClick={() => show(i)}
-                className="block aspect-[76/100] w-full overflow-hidden rounded-md bg-[#f2f2f2] ring-black aria-[current=true]:ring-1 lg:rounded-lg"
+                className="block aspect-[76/100] w-full overflow-hidden rounded-md bg-surface ring-black aria-[current=true]:ring-1 lg:rounded-lg"
               >
                 <img src={thumb} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
               </button>

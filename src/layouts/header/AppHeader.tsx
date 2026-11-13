@@ -36,8 +36,8 @@ function AppHeader() {
   return (
     // Border as a 1px shadow so it adds no height when it appears.
     <header
-      className={`sticky top-0 z-40 bg-white font-clash font-medium text-[#141414] motion-safe:transition-shadow motion-safe:duration-200 ${
-        scrolled ? 'shadow-[0_1px_0_#e6e6e6]' : ''
+      className={`sticky top-0 z-40 bg-white font-clash font-medium text-ink-900 motion-safe:transition-shadow motion-safe:duration-200 ${
+        scrolled ? 'shadow-[0_1px_0_theme(colors.line)]' : ''
       }`}
     >
       <div className="mx-auto max-w-[1240px] px-5">

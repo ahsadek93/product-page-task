@@ -28,7 +28,7 @@ function ProductDescription({ html }: { html: string }) {
         // lg:text-base/[1.3], since plain lg:text-base would reset the line height to 24px.
         // max-height can't transition to `none`, so expand to the measured pixel height instead
         style={expanded && overflows ? { maxHeight: fullHeight } : undefined}
-        className="max-h-[6.5em] overflow-hidden text-sm leading-[1.3] text-[#666] motion-safe:transition-[max-height] motion-safe:duration-300 motion-safe:ease-out lg:max-h-[5.2em] lg:text-base/[1.3] [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
+        className="max-h-[6.5em] overflow-hidden text-sm leading-[1.3] text-ink-500 motion-safe:transition-[max-height] motion-safe:duration-300 motion-safe:ease-out lg:max-h-[5.2em] lg:text-base/[1.3] [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
         dangerouslySetInnerHTML={{ __html: clean }}
       />
       {overflows && (

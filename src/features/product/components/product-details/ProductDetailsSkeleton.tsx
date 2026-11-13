@@ -1,5 +1,5 @@
 // Mirrors ProductDetails' grid, sizes and gaps so nothing shifts when the real content lands.
-const bone = 'rounded-md bg-[#f2f2f2] lg:rounded-lg';
+const bone = 'rounded-md bg-surface lg:rounded-lg';
 
 function ProductDetailsSkeleton() {
   return (
@@ -45,7 +45,7 @@ function ProductDetailsSkeleton() {
                 <div className={`h-6 w-28 lg:h-7 lg:w-36 ${bone}`} />
               </div>
             </div>
-            <div className="h-px w-full bg-[#f2f2f2]" />
+            <div className="h-px w-full bg-surface" />
           </div>
 
           <div className="flex flex-col gap-8 lg:gap-10">

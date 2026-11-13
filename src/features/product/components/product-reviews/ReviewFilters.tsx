@@ -9,7 +9,7 @@ const topics = ['Product Quality', 'Seller Services', 'Product Price', 'Shipment
 function FilterGroup({ title, children }: { title: string; children: ReactNode }) {
   return (
     <fieldset>
-      <legend className="flex w-full items-center justify-between text-base font-semibold leading-[1.4] tracking-[-0.2px] text-[#141414]">
+      <legend className="flex w-full items-center justify-between text-base font-semibold leading-[1.4] tracking-[-0.2px] text-ink-900">
         {title}
         <img src={chevronUp} alt="" width={12} height={12} className="-scale-y-100" />
       </legend>
@@ -24,7 +24,7 @@ function FilterOption({ children }: { children: ReactNode }) {
       <span className="flex size-6 items-center justify-center">
         <input
           type="checkbox"
-          className="size-[18px] cursor-pointer appearance-none border-[1.5px] border-[#c4c8cc] checked:border-[#141414] checked:bg-[#141414]"
+          className="size-[18px] cursor-pointer appearance-none border-[1.5px] border-[#c4c8cc] checked:border-ink-900 checked:bg-ink-900"
         />
       </span>
       {children}
@@ -36,7 +36,7 @@ function FilterOption({ children }: { children: ReactNode }) {
 function ReviewFilters() {
   return (
     <aside className="hidden w-[278px] shrink-0 self-start rounded-lg border-[0.8px] border-dashed border-[#bbb] p-[22.4px] lg:block">
-      <h3 className="text-xl font-semibold leading-[1.4] tracking-[-0.2px] text-[#292929]">Reviews Filter</h3>
+      <h3 className="text-xl font-semibold leading-[1.4] tracking-[-0.2px] text-ink-800">Reviews Filter</h3>
       <img src={dashedLine} alt="" className="mt-4 block h-[0.5px] w-full" />
       <div className="mt-6 flex flex-col gap-6">
         <FilterGroup title="Rating">

@@ -51,7 +51,7 @@ const boxClass = 'rounded-md border font-medium leading-[1.6] lg:rounded-lg';
 function ProductReviews() {
   return (
     <section className="font-clash">
-      <h2 className="text-2xl font-semibold leading-[1.4] tracking-[-0.2px] text-[#141414] lg:text-[28px] lg:leading-[1.2] lg:tracking-normal">
+      <h2 className="text-2xl font-semibold leading-[1.4] tracking-[-0.2px] text-ink-900 lg:text-[28px] lg:leading-[1.2] lg:tracking-normal">
         Product Reviews
       </h2>
 
@@ -63,7 +63,7 @@ function ProductReviews() {
         <ReviewFilters />
 
         <div className="lg:max-w-[882px] lg:flex-1">
-          <h3 className="text-base font-semibold leading-[1.4] tracking-[-0.2px] text-[#141414] lg:text-xl lg:text-[#292929]">
+          <h3 className="text-base font-semibold leading-[1.4] tracking-[-0.2px] text-ink-900 lg:text-xl lg:text-ink-800">
             Review Lists
           </h3>
           <div className="mt-4 flex items-start justify-between gap-2">
@@ -75,8 +75,8 @@ function ProductReviews() {
                   aria-pressed={i === 0}
                   className={`${boxClass} h-8 px-2.5 text-xs lg:h-auto lg:py-2.5 lg:text-sm ${
                     i === 0
-                      ? 'border-[#333] bg-[#ebebeb] text-[#141414] lg:px-5'
-                      : 'border-[#e4e9ee] text-[#0b0f0e] lg:border-[#e6e6e6] lg:px-4 lg:text-[#141414]'
+                      ? 'border-ink-700 bg-surface-selected text-ink-900 lg:px-5'
+                      : 'border-review-line text-review-ink lg:border-line lg:px-4 lg:text-ink-900'
                   }`}
                 >
                   {tab}
@@ -86,7 +86,7 @@ function ProductReviews() {
             <button
               type="button"
               aria-label="Filter reviews"
-              className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#e4e9ee] lg:hidden"
+              className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-review-line lg:hidden"
             >
               <img src={filterIcon} alt="" width={20} height={20} />
             </button>
@@ -111,7 +111,7 @@ function ProductReviews() {
               page === '...' ? (
                 <span
                   key={page}
-                  className={`${boxClass} flex size-9 items-center justify-center border-[#e4e9ee] text-[11.5px] text-[#7a7a7a] lg:size-11 lg:text-sm`}
+                  className={`${boxClass} flex size-9 items-center justify-center border-review-line text-[11.5px] text-ink-400 lg:size-11 lg:text-sm`}
                 >
                   ...
                 </span>
@@ -121,7 +121,7 @@ function ProductReviews() {
                   type="button"
                   aria-current={page === '1' ? 'page' : undefined}
                   className={`${boxClass} size-9 text-[11.5px] lg:size-11 lg:text-sm ${
-                    page === '1' ? 'border-[#333] bg-white text-[#141414]' : 'border-[#e4e9ee] text-[#7a7a7a]'
+                    page === '1' ? 'border-ink-700 bg-white text-ink-900' : 'border-review-line text-ink-400'
                   }`}
                 >
                   {page}

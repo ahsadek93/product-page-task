@@ -29,7 +29,7 @@ function ProductPage() {
           { label: crumbs.collection },
           {
             label: isPending ? (
-              <span className="inline-block h-[1em] w-48 rounded bg-[#f2f2f2] align-middle motion-safe:animate-pulse" />
+              <span className="inline-block h-[1em] w-48 rounded bg-surface align-middle motion-safe:animate-pulse" />
             ) : (
               (crumbs.name ?? 'Product')
             ),

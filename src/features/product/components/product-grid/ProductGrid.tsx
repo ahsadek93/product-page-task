@@ -55,8 +55,8 @@ function ProductGrid({ title }: { title: string }) {
   return (
     <section className="font-clash">
       <div className="flex items-end justify-between leading-[1.2]">
-        <h2 className="text-2xl font-semibold text-[#292929] lg:text-[28px] lg:text-[#141414]">{title}</h2>
-        <button type="button" className="text-base font-medium text-[#525252] underline">
+        <h2 className="text-2xl font-semibold text-ink-800 lg:text-[28px] lg:text-ink-900">{title}</h2>
+        <button type="button" className="text-base font-medium text-ink-600 underline">
           View All
         </button>
       </div>

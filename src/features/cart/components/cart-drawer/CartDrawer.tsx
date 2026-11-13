@@ -14,7 +14,7 @@ function CartDrawer() {
     <Dialog open={isOpen} onClose={close} className="relative z-50 font-clash">
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-[#141414]/40 duration-300 ease-out data-[closed]:opacity-0"
+        className="fixed inset-0 bg-ink-900/40 duration-300 ease-out data-[closed]:opacity-0"
       />
       <div className="fixed inset-y-0 right-0 flex w-full max-w-[440px]">
         <DialogPanel
@@ -22,14 +22,14 @@ function CartDrawer() {
           className="flex w-full flex-col bg-white duration-300 ease-out data-[closed]:translate-x-full motion-reduce:duration-0"
         >
           <div className="flex items-center justify-between px-6 py-6 lg:px-8">
-            <DialogTitle className="text-2xl font-semibold leading-[1.2] text-[#141414]">
-              Your Cart {count > 0 && <span className="text-[#8f8f8f]">({count})</span>}
+            <DialogTitle className="text-2xl font-semibold leading-[1.2] text-ink-900">
+              Your Cart {count > 0 && <span className="text-ink-300">({count})</span>}
             </DialogTitle>
             <button
               type="button"
               aria-label="Close cart"
               onClick={close}
-              className="-m-2 p-2 text-[#525252] hover:text-[#141414]"
+              className="-m-2 p-2 text-ink-600 hover:text-ink-900"
             >
               <svg
                 width="20"
@@ -52,8 +52,8 @@ function CartDrawer() {
           {items.length === 0 ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center leading-[1.2]">
               <div className="flex flex-col gap-2">
-                <p className="text-xl font-semibold text-[#292929]">Your cart is empty</p>
-                <p className="text-base font-medium text-[#8f8f8f]">Items you add will show up here.</p>
+                <p className="text-xl font-semibold text-ink-800">Your cart is empty</p>
+                <p className="text-base font-medium text-ink-300">Items you add will show up here.</p>
               </div>
               <button type="button" onClick={close} className="btn-outline px-[35px] text-lg">
                 Continue Shopping
@@ -61,7 +61,7 @@ function CartDrawer() {
             </div>
           ) : (
             <>
-              <ul className="flex-1 divide-y divide-dashed divide-[#e6e6e6] overflow-y-auto px-6 lg:px-8">
+              <ul className="flex-1 divide-y divide-dashed divide-line overflow-y-auto px-6 lg:px-8">
                 {items.map((item) => (
                   <CartLine
                     key={item.variantId}
@@ -76,10 +76,10 @@ function CartDrawer() {
                 <Separator />
                 <div className="flex flex-col gap-2 leading-[1.2]">
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-medium text-[#8f8f8f]">Subtotal</span>
-                    <span className="text-xl font-semibold text-[#141414] lg:text-2xl">{formatPrice(subtotal)}</span>
+                    <span className="text-lg font-medium text-ink-300">Subtotal</span>
+                    <span className="text-xl font-semibold text-ink-900 lg:text-2xl">{formatPrice(subtotal)}</span>
                   </div>
-                  <p className="text-sm font-medium text-[#8f8f8f]">Shipping calculated at checkout.</p>
+                  <p className="text-sm font-medium text-ink-300">Shipping calculated at checkout.</p>
                 </div>
                 <div className="flex flex-col gap-3 text-lg leading-[1.2]">
                   <button type="button" className="btn-primary w-full">

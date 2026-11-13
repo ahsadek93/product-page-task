@@ -37,9 +37,9 @@ body {
 @layer components {
   /* The two button looks from Figma. Width, horizontal padding and text size stay at the call site. */
   .btn-primary {
-    @apply rounded-md bg-[#141414] py-[17px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg;
+    @apply rounded-md bg-ink-900 py-[17px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg;
   }
   .btn-outline {
-    @apply rounded-md border border-[#b8b8b8] bg-white py-[17px] font-medium text-[#333] disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg;
+    @apply rounded-md border border-ink-200 bg-white py-[17px] font-medium text-ink-700 disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg;
   }
 }

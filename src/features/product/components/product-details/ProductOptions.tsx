@@ -26,14 +26,14 @@ function ProductOptions({ options, selection, select, unavailableReason }: Produ
         return (
           <div key={option.name} className="flex flex-col gap-[18px]">
             <div className="flex items-center justify-between leading-[1.2]">
-              <p className="text-lg font-medium capitalize text-[#8f8f8f] lg:text-xl">
+              <p className="text-lg font-medium capitalize text-ink-300 lg:text-xl">
                 {option.name}:{' '}
-                <span className="font-semibold text-[#292929]">
+                <span className="font-semibold text-ink-800">
                   <SwapText text={selected ?? ''} />
                 </span>
               </p>
               {option.name === 'size' && (
-                <button type="button" className="text-base font-medium text-[#525252] underline">
+                <button type="button" className="text-base font-medium text-ink-600 underline">
                   View Size Chart
                 </button>
               )}
@@ -52,7 +52,7 @@ function ProductOptions({ options, selection, select, unavailableReason }: Produ
                       disabled={reason !== undefined}
                       title={reason}
                       onClick={() => select(option.name, value.name)}
-                      className="h-10 flex-1 overflow-hidden disabled:cursor-not-allowed disabled:opacity-40 rounded-md bg-white ring-1 ring-transparent ring-offset-[4px] ring-offset-white motion-safe:transition-[box-shadow,opacity] motion-safe:duration-200 motion-safe:ease-out aria-pressed:ring-[#141414] lg:w-[75px] lg:flex-none lg:rounded-lg"
+                      className="h-10 flex-1 overflow-hidden disabled:cursor-not-allowed disabled:opacity-40 rounded-md bg-white ring-1 ring-transparent ring-offset-[4px] ring-offset-white motion-safe:transition-[box-shadow,opacity] motion-safe:duration-200 motion-safe:ease-out aria-pressed:ring-ink-900 lg:w-[75px] lg:flex-none lg:rounded-lg"
                     >
                       {/* Selection is a ring outside the box, so the image never resizes or re-crops.
                           No image → colour fill from the name → the name as text. */}
@@ -64,7 +64,7 @@ function ProductOptions({ options, selection, select, unavailableReason }: Produ
                           style={{ backgroundColor: value.name }}
                         />
                       ) : (
-                        <span className="flex size-full items-center justify-center border border-[#e6e6e6] text-sm font-semibold capitalize text-[#525252] [border-radius:inherit]">
+                        <span className="flex size-full items-center justify-center border border-line text-sm font-semibold capitalize text-ink-600 [border-radius:inherit]">
                           {value.name}
                         </span>
                       )}
@@ -89,7 +89,7 @@ function ProductOptions({ options, selection, select, unavailableReason }: Produ
                       disabled={reason !== undefined}
                       title={reason}
                       onClick={() => select(option.name, value.name)}
-                      className="h-10 rounded-md border border-[#e6e6e6] motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out disabled:cursor-not-allowed disabled:text-[#b8b8b8] disabled:line-through text-xl font-semibold leading-[1.2] text-[#525252] aria-pressed:border-[#333] aria-pressed:bg-[#ebebeb] aria-pressed:text-[#141414] lg:rounded-lg"
+                      className="h-10 rounded-md border border-line motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out disabled:cursor-not-allowed disabled:text-ink-200 disabled:line-through text-xl font-semibold leading-[1.2] text-ink-600 aria-pressed:border-ink-700 aria-pressed:bg-surface-selected aria-pressed:text-ink-900 lg:rounded-lg"
                     >
                       {value.name}
                     </button>

@@ -24,7 +24,7 @@ const COLUMNS = [
 
 function AppFooter() {
   return (
-    <footer className="bg-[#f2f2f2] pb-[22px] pt-[62px] font-clash lg:pb-[27px] lg:pt-[72px]">
+    <footer className="bg-surface pb-[22px] pt-[62px] font-clash lg:pb-[27px] lg:pt-[72px]">
       <div className="mx-auto max-w-[1240px] px-5">
         <div className="flex flex-col gap-12 md:flex-row md:justify-between md:gap-10">
           <div className="w-full max-w-[310px]">
@@ -42,12 +42,12 @@ function AppFooter() {
                   type="email"
                   aria-label="Email"
                   placeholder="Get latest offers to your inbox"
-                  className="w-full min-w-0 border-0 bg-transparent p-0 text-base font-medium leading-[1.6] tracking-[0.16px] text-[#141414] placeholder:text-[#787a7c]"
+                  className="w-full min-w-0 border-0 bg-transparent p-0 text-base font-medium leading-[1.6] tracking-[0.16px] text-ink-900 placeholder:text-[#787a7c]"
                 />
                 <button
                   type="submit"
                   aria-label="Subscribe"
-                  className="ml-8 shrink-0 rounded-md bg-[#141414] px-4 py-2 lg:rounded-lg"
+                  className="ml-8 shrink-0 rounded-md bg-ink-900 px-4 py-2 lg:rounded-lg"
                 >
                   <img src={arrowIcon} alt="" width={20} height={20} className="-rotate-90 -scale-y-100" />
                 </button>
@@ -78,7 +78,7 @@ function AppFooter() {
                 <ul className="flex flex-col gap-3 text-sm leading-[22px]">
                   {links.map((link) => (
                     <li key={link}>
-                      <a href="#" className="text-[#3e3e59] lg:text-[#141414]">
+                      <a href="#" className="text-[#3e3e59] lg:text-ink-900">
                         {link}
                       </a>
                     </li>

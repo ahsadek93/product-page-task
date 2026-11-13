@@ -51,7 +51,7 @@ function CartToast() {
           onMouseLeave={hideLater}
           onFocus={pause}
           onBlur={hideLater}
-          className="pointer-events-auto flex w-full max-w-[400px] items-center gap-3.5 rounded-lg bg-[#141414] p-3 pr-4 text-white shadow-[0_8px_24px_rgba(20,20,20,0.18)] transition duration-300 ease-out data-[closed]:translate-y-3 data-[closed]:opacity-0 motion-reduce:transition-none lg:w-[380px]"
+          className="pointer-events-auto flex w-full max-w-[400px] items-center gap-3.5 rounded-lg bg-ink-900 p-3 pr-4 text-white shadow-[0_8px_24px_rgba(20,20,20,0.18)] transition duration-300 ease-out data-[closed]:translate-y-3 data-[closed]:opacity-0 motion-reduce:transition-none lg:w-[380px]"
         >
           <img src={item?.image} alt="" className="size-12 shrink-0 rounded-md bg-[#2a2a2a] object-cover" />
           <div className="flex min-w-0 flex-1 flex-col gap-1 leading-[1.2]">
@@ -61,7 +61,8 @@ function CartToast() {
                 height="16"
                 viewBox="0 0 16 16"
                 fill="none"
-                stroke={capped ? '#f79009' : '#12b76a'}
+                stroke="currentColor"
+                className={capped ? 'text-warning' : 'text-success'}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -71,7 +72,7 @@ function CartToast() {
               </svg>
               {capped ? `Only ${item?.maxQuantity} available, all in your cart` : 'Added to cart'}
             </p>
-            <p className="truncate text-sm font-medium capitalize text-[#b8b8b8]">
+            <p className="truncate text-sm font-medium capitalize text-ink-200">
               {item?.name}
               {options && ` · ${options}`}
             </p>
@@ -79,7 +80,7 @@ function CartToast() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="shrink-0 text-sm font-medium underline underline-offset-2 hover:text-[#b8b8b8]"
+            className="shrink-0 text-sm font-medium underline underline-offset-2 hover:text-ink-200"
           >
             View Cart
           </button>

@@ -14,8 +14,8 @@ const crashFallback = (
     className="flex flex-col items-center gap-8 px-4 py-16 text-center font-clash leading-[1.2] lg:py-24"
   >
     <div className="flex max-w-md flex-col gap-3">
-      <h1 className="text-2xl font-semibold text-[#292929] lg:text-[28px]">Something went wrong</h1>
-      <p className="text-base text-[#666] lg:text-lg">An unexpected error stopped this page from loading.</p>
+      <h1 className="text-2xl font-semibold text-ink-800 lg:text-[28px]">Something went wrong</h1>
+      <p className="text-base text-ink-500 lg:text-lg">An unexpected error stopped this page from loading.</p>
     </div>
     <a href="/" className="btn-primary px-8 text-lg">
       Back to homepage
