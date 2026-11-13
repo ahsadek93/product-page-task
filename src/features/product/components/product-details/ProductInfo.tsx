@@ -1,5 +1,6 @@
 import type { Product } from '@/features/product/types/product';
 import type { VariantSelection } from '@/features/product/hooks/useVariantSelection';
+import type { AddToCart } from '@/features/product/hooks/useAddToCart';
 import { formatPrice } from '@/shared/utils/formatPrice';
 import SwapText from '@/shared/components/swap-text/SwapText';
 import ProductDescription from './ProductDescription';
@@ -10,12 +11,17 @@ import dashedLine from '@/shared/assets/dashed-line.svg';
 type ProductInfoProps = {
   product: Product;
   selection: VariantSelection;
+  cart: AddToCart;
 };
 
 // ponytail: fixed low-stock threshold; make it a store setting if merchants need to tune it
 const LOW_STOCK = 5;
 
-function ProductInfo({ product, selection: { selection, select, isAvailable, stock, price, salePrice, canAddToCart, addToCart, checkoutNow } }: ProductInfoProps) {
+function ProductInfo({
+  product,
+  selection: { selection, select, isAvailable, stock, price, salePrice },
+  cart: { canAddToCart, addToCart, checkoutNow },
+}: ProductInfoProps) {
   return (
     <div className="flex flex-col gap-[38px] font-clash lg:w-[520px] lg:shrink-0">
       <div className="flex flex-col gap-12 lg:gap-14">
