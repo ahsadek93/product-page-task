@@ -55,11 +55,7 @@ function CartDrawer() {
                 <p className="text-xl font-semibold text-[#292929]">Your cart is empty</p>
                 <p className="text-base font-medium text-[#8f8f8f]">Items you add will show up here.</p>
               </div>
-              <button
-                type="button"
-                onClick={close}
-                className="rounded-md border border-[#b8b8b8] bg-white px-[35px] py-[17px] text-lg font-medium text-[#333] lg:rounded-lg"
-              >
+              <button type="button" onClick={close} className="btn-outline px-[35px] text-lg">
                 Continue Shopping
               </button>
             </div>
@@ -86,17 +82,10 @@ function CartDrawer() {
                   <p className="text-sm font-medium text-[#8f8f8f]">Shipping calculated at checkout.</p>
                 </div>
                 <div className="flex flex-col gap-3 text-lg leading-[1.2]">
-                  <button
-                    type="button"
-                    className="w-full rounded-md bg-[#141414] py-[17px] font-semibold text-white lg:rounded-lg"
-                  >
+                  <button type="button" className="btn-primary w-full">
                     Checkout Now
                   </button>
-                  <button
-                    type="button"
-                    onClick={close}
-                    className="w-full rounded-md border border-[#b8b8b8] bg-white py-[17px] font-medium text-[#333] lg:rounded-lg"
-                  >
+                  <button type="button" onClick={close} className="btn-outline w-full">
                     Continue Shopping
                   </button>
                 </div>

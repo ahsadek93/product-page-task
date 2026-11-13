@@ -112,19 +112,14 @@ function ProductInfo({
 
         {/* CTA */}
         <div className="flex flex-col items-start gap-[18px] text-lg leading-[1.2] lg:flex-row lg:gap-6 lg:text-xl">
-          <button
-            type="button"
-            disabled={!canAddToCart}
-            onClick={addToCart}
-            className="w-[296px] rounded-md bg-[#141414] py-[17px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg"
-          >
+          <button type="button" disabled={!canAddToCart} onClick={addToCart} className="btn-primary w-[296px]">
             Add To Cart
           </button>
           <button
             type="button"
             disabled={!canAddToCart}
             onClick={checkoutNow}
-            className="rounded-md border border-[#b8b8b8] bg-white px-[35px] py-[17px] font-medium text-[#333] disabled:cursor-not-allowed disabled:opacity-40 lg:h-[58px] lg:w-[200px] lg:rounded-lg lg:px-0"
+            className="btn-outline px-[35px] lg:h-[58px] lg:w-[200px] lg:px-0"
           >
             Checkout Now
           </button>

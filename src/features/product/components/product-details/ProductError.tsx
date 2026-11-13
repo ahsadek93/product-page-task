@@ -24,7 +24,7 @@ function ProductError() {
         <p className="text-base text-[#666] lg:text-lg">We couldn't load this product. It may have been removed.</p>
       </div>
 
-      <Link to="/" className="rounded-md bg-[#141414] px-8 py-[17px] text-lg font-semibold text-white lg:rounded-lg">
+      <Link to="/" className="btn-primary px-8 text-lg">
         Back to homepage
       </Link>
     </div>
