@@ -27,7 +27,7 @@ function RelatedProducts() {
         </button>
       </div>
 
-      <ul className="mt-10 grid grid-cols-2 gap-x-5 gap-y-9 lg:mt-6 lg:grid-cols-5 lg:gap-x-[35px]">
+      <ul className="mt-10 grid grid-cols-2 gap-x-5 gap-y-9 md:grid-cols-3 lg:mt-6 lg:grid-cols-5 lg:gap-x-[35px]">
         {products.map((item, i) => (
           <li key={i} className={i === 5 ? 'lg:hidden' : undefined}>
             <ProductCard item={item} />

@@ -5,14 +5,14 @@ function ProductDetailsSkeleton() {
   return (
     <section
       aria-busy="true"
-      className="flex flex-col gap-14 motion-safe:animate-pulse lg:flex-row lg:items-start lg:justify-between lg:gap-10"
+      className="flex flex-col gap-14 motion-safe:animate-pulse md:flex-row md:items-start md:justify-between md:gap-8 lg:gap-10"
     >
       <span role="status" className="sr-only">
         Loading product…
       </span>
 
       {/* Gallery: main image + action column, thumbnails below */}
-      <div className="grid grid-cols-[1fr_44px] gap-x-3 gap-y-5 lg:max-w-[545px] lg:flex-1 lg:grid-cols-[minmax(0,458px)_52px] lg:gap-x-[35px] lg:gap-y-6">
+      <div className="grid grid-cols-[1fr_44px] gap-x-3 gap-y-5 md:min-w-0 md:max-w-[545px] md:flex-1 lg:grid-cols-[minmax(0,458px)_52px] lg:gap-x-[35px] lg:gap-y-6">
         <div className={`aspect-[458/610] ${bone}`} />
         <div className="flex flex-col justify-between">
           <div className="flex flex-col gap-5">
@@ -32,7 +32,7 @@ function ProductDetailsSkeleton() {
       </div>
 
       {/* Info column */}
-      <div className="flex flex-col gap-12 lg:w-[520px] lg:shrink-0 lg:gap-14">
+      <div className="flex flex-col gap-12 md:w-[46%] md:shrink-0 lg:w-[520px] lg:gap-14">
         <div className="flex flex-col gap-6 lg:gap-7">
           <div className="flex flex-col gap-7">
             <div className="flex flex-col gap-3.5 lg:gap-5">

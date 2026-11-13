@@ -23,7 +23,7 @@ function ProductInfo({
   cart: { canAddToCart, addToCart, checkoutNow },
 }: ProductInfoProps) {
   return (
-    <div className="flex flex-col gap-[38px] font-clash lg:w-[520px] lg:shrink-0">
+    <div className="flex flex-col gap-[38px] font-clash md:w-[46%] md:shrink-0 lg:w-[520px]">
       <div className="flex flex-col gap-12 lg:gap-14">
         <div className="flex flex-col gap-6 lg:gap-7">
           {/* Heading, price, rating */}
@@ -36,8 +36,8 @@ function ProductInfo({
                   {product.name}
                 </h1>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 leading-[1.2]">
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                <div className="flex items-center gap-4 whitespace-nowrap leading-[1.2]">
                   {salePrice !== null && (
                     <s className="text-sm font-medium text-[#666] lg:text-lg">{formatPrice(price)}</s>
                   )}
@@ -45,7 +45,7 @@ function ProductInfo({
                     {formatPrice(salePrice ?? price)}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 leading-none lg:gap-2">
+                <div className="flex shrink-0 items-center gap-1 whitespace-nowrap leading-none lg:gap-2">
                   <span className="text-base text-[#666] lg:text-xl">1,238 Sold</span>
                   <img src={dotIcon} alt="" width={6} height={6} />
                   <span className="flex items-center gap-1">

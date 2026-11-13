@@ -16,8 +16,8 @@ const breakdown = [
 
 function ReviewSummary() {
   return (
-    <div className="rounded border-[0.8px] border-dashed border-[#b8b8b8] p-[15px] lg:flex lg:rounded-lg lg:p-[22.4px]">
-      <div className="flex items-center gap-4 lg:w-[348px] lg:shrink-0 lg:self-start">
+    <div className="rounded border-[0.8px] border-dashed border-[#b8b8b8] p-[15px] md:flex md:gap-10 lg:gap-0 lg:rounded-lg lg:p-[22.4px]">
+      <div className="flex items-center gap-4 md:shrink-0 md:self-start lg:w-[348px]">
         <div className="relative size-16 shrink-0 lg:size-[84px]">
           <img src={ringTrackMobile} alt="" className="absolute inset-0 size-full lg:hidden" />
           <img src={ringArcMobile} alt="" className="absolute inset-0 size-full lg:hidden" />
@@ -35,7 +35,7 @@ function ReviewSummary() {
         </div>
       </div>
 
-      <ul className="mt-6 flex flex-col gap-3 text-xs font-medium leading-[1.4] text-[#0b0f0e] lg:mt-0 lg:flex-1 lg:text-base lg:leading-[1.6]">
+      <ul className="mt-6 flex flex-col gap-3 text-xs font-medium leading-[1.4] text-[#0b0f0e] md:mt-0 md:flex-1 lg:text-base lg:leading-[1.6]">
         {breakdown.map((row) => (
           <li key={row.stars} className="flex items-center gap-3 lg:gap-[25px]">
             <span className="flex w-10 shrink-0 items-center lg:w-12 lg:gap-1">

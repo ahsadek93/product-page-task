@@ -26,7 +26,7 @@ function AppFooter() {
   return (
     <footer className="bg-[#f2f2f2] pb-8 pt-[62px] font-clash lg:pt-[72px]">
       <div className="mx-auto max-w-[1240px] px-5">
-        <div className="flex flex-col gap-12 lg:flex-row lg:justify-between">
+        <div className="flex flex-col gap-12 md:flex-row md:justify-between md:gap-10">
           <div className="w-[310px]">
             <img src={logo} alt="John Lewis & Partners" className="h-8 w-[170px] object-cover" />
 

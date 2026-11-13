@@ -31,7 +31,7 @@ function ProductGallery({ images, name }: ProductGalleryProps) {
   };
 
   return (
-    <div className="grid grid-cols-[1fr_44px] gap-x-3 gap-y-5 lg:sticky lg:top-6 lg:max-w-[545px] lg:flex-1 lg:grid-cols-[minmax(0,458px)_52px] lg:gap-x-[35px] lg:gap-y-6">
+    <div className="grid grid-cols-[1fr_44px] gap-x-3 gap-y-5 md:sticky md:top-[99px] md:min-w-0 md:max-w-[545px] md:flex-1 lg:top-[121px] lg:grid-cols-[minmax(0,458px)_52px] lg:gap-x-[35px] lg:gap-y-6">
       <div className="aspect-[458/610] overflow-hidden rounded-lg bg-[#f2f2f2]">
         {/* Hover zooms on mouse devices, click/tap toggles zoom everywhere. */}
         <button
