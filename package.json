@@ -16,7 +16,8 @@
     "start": "vite",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test --disable-warning=MODULE_TYPELESS_PACKAGE_JSON \"src/**/*.test.ts\""
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.11",
