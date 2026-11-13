@@ -36,6 +36,12 @@ const v = { ...variant(0), variation_props: [
 ] };
 assert.deepEqual(toProduct(dto({ variants: [v] })).variants[0].options, { color: 'red', size: '40' });
 
+// description: empty editor paragraphs dropped, &nbsp; and repeated spaces collapsed, real content kept
+assert.equal(
+  toProduct(dto({ description: '<p>A</p><p><br></p><p> &nbsp; </p><p><br/><br></p><p>B&nbsp;&nbsp;:&nbsp;C</p>' })).descriptionHtml,
+  '<p>A</p><p>B : C</p>',
+);
+
 // BE null lists/strings don't crash
 const empty = toProduct(dto({ images: null, variations: null, variants: null, categories: null, description: null as never }));
 assert.deepEqual([empty.options, empty.variants, empty.categories, empty.descriptionHtml], [[], [], [], '']);

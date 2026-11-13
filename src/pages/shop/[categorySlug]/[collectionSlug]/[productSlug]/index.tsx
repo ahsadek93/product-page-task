@@ -7,7 +7,7 @@ import { useProduct } from '@/features/product/hooks/useProduct';
 
 function ProductPage() {
   const { productSlug = '' } = useParams();
-  const { isPending, isError } = useProduct(productSlug);
+  const { data: product, isPending, isError } = useProduct(productSlug);
 
   // ponytail: plain text states, skeletons when the design has them
   if (isPending) return <p className="p-8 text-center">Loading…</p>;
@@ -25,7 +25,7 @@ function ProductPage() {
         ]}
       />
       <div className="mt-6 lg:mt-10">
-        <ProductDetails />
+        <ProductDetails product={product} />
       </div>
       <div className="mt-16 lg:mt-24">
         <RelatedProducts />

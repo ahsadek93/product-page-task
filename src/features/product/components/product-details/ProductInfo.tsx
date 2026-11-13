@@ -1,19 +1,17 @@
+import DOMPurify from 'dompurify';
+import type { Product, ProductOption } from '@/features/product/types/product';
+import { formatPrice } from '@/shared/utils/formatPrice';
 import dotIcon from './assets/dot.svg';
 import starIcon from './assets/star.svg';
 import dashedLine from './assets/dashed-line.svg';
 
-// ponytail: static Figma content and fixed selections, become props when product data is wired in
-const colors = [
-  { name: 'Royal Brown', hex: '#534029' },
-  { name: 'Light Grey', hex: '#ebebeb' },
-  { name: 'Blue', hex: '#3a6a90' },
-  { name: 'Black', hex: '#11171d' },
-];
-const sizes = ['6', '8', '10', '14', '18', '20'];
-const selectedColor = 'Royal Brown';
-const selectedSize = '8';
+// ponytail: first value shown as selected; real selection + variant pricing is the next step
+const selectedOf = (option: ProductOption) => option.values[0]?.name;
 
-function ProductInfo() {
+function ProductInfo({ product }: { product: Product }) {
+  // BE description is merchant HTML: sanitize before injecting
+  const description = DOMPurify.sanitize(product.descriptionHtml);
+
   return (
     <div className="flex flex-col gap-[38px] font-clash lg:w-[520px] lg:shrink-0">
       <div className="flex flex-col gap-12 lg:gap-14">
@@ -22,15 +20,20 @@ function ProductInfo() {
           <div className="flex flex-col gap-7">
             <div className="flex flex-col gap-3.5 lg:gap-5">
               <div className="flex flex-col gap-2 leading-[1.2] lg:gap-3">
+                {/* ponytail: brand, sold count and rating aren't in the API; static Figma values until reviews are wired */}
                 <p className="text-[13px] font-medium tracking-[0.01em] text-[#8f8f8f] lg:text-base">John Lewis ANYDAY</p>
                 <h1 className="text-[23px] font-semibold tracking-[-0.005em] text-[#292929] lg:text-4xl">
-                  Long Sleeve Overshirt, Khaki, 6
+                  {product.name}
                 </h1>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 leading-[1.2]">
-                  <s className="text-sm font-medium text-[#666] lg:text-lg">£40.00</s>
-                  <span className="text-xl font-semibold text-[#141414] lg:text-[28px]">£28.00</span>
+                  {product.salePrice !== null && (
+                    <s className="text-sm font-medium text-[#666] lg:text-lg">{formatPrice(product.price)}</s>
+                  )}
+                  <span className="text-xl font-semibold text-[#141414] lg:text-[28px]">
+                    {formatPrice(product.salePrice ?? product.price)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1 leading-none lg:gap-2">
                   <span className="text-base text-[#666] lg:text-xl">1,238 Sold</span>
@@ -53,73 +56,58 @@ function ProductInfo() {
           <div className="flex flex-col gap-8 lg:gap-10">
             <div className="flex flex-col gap-2.5">
               <h2 className="font-raleway text-lg font-bold leading-[1.2] text-[#292929] lg:text-xl">Description:</h2>
-              <p className="text-sm leading-[1.3] text-[#666] lg:text-base">
-                Boba etiam ut bulla tea est potus dilectus singulari compositione saporum et textuum, quae in Taiwan
-                annis 1980 orta sunt. Boba refert ad pilas masticas tapiocas in fundo potus inventas, quae typice
-                lacte tea nigro sapiuntur. Boba phaenomenon.{' '}
-                <button type="button" className="font-medium text-black">
-                  See More....
-                </button>
-              </p>
+              <div
+                className="text-sm leading-[1.3] text-[#666] lg:text-base [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
             </div>
 
-            <div className="flex flex-col gap-[18px]">
-              <p className="text-lg font-medium leading-[1.2] text-[#8f8f8f] lg:text-xl">
-                Color: <span className="font-semibold text-[#292929]">{selectedColor}</span>
-              </p>
-              <div className="flex gap-3.5">
-                {colors.map((color) =>
-                  color.name === selectedColor ? (
-                    <button
-                      key={color.name}
-                      type="button"
-                      aria-label={color.name}
-                      aria-pressed="true"
-                      className="h-10 flex-1 rounded-md border border-[#141414] bg-white p-[5px] lg:w-[75px] lg:flex-none lg:rounded-lg"
-                    >
-                      <span className="block size-full rounded" style={{ backgroundColor: color.hex }} />
-                    </button>
+            {product.options.map((option) => {
+              const selected = selectedOf(option);
+              return (
+                <div key={option.name} className="flex flex-col gap-[18px]">
+                  <div className="flex items-center justify-between leading-[1.2]">
+                    <p className="text-lg font-medium capitalize text-[#8f8f8f] lg:text-xl">
+                      {option.name}: <span className="font-semibold text-[#292929]">{selected}</span>
+                    </p>
+                    {option.name === 'size' && (
+                      <button type="button" className="text-base font-medium text-[#525252] underline">
+                        View Size Chart
+                      </button>
+                    )}
+                  </div>
+
+                  {option.type === 'image' ? (
+                    <div className="flex gap-3.5">
+                      {option.values.map((value) => (
+                        <button
+                          key={value.id}
+                          type="button"
+                          aria-label={value.name}
+                          aria-pressed={value.name === selected}
+                          className="h-10 flex-1 overflow-hidden rounded-md border border-transparent bg-white aria-pressed:border-[#141414] aria-pressed:p-[5px] lg:w-[75px] lg:flex-none lg:rounded-lg"
+                        >
+                          <img src={value.image} alt="" className="size-full rounded object-cover" />
+                        </button>
+                      ))}
+                    </div>
                   ) : (
-                    <button
-                      key={color.name}
-                      type="button"
-                      aria-label={color.name}
-                      aria-pressed="false"
-                      className="h-10 flex-1 rounded-md lg:w-[75px] lg:flex-none lg:rounded-lg"
-                      style={{ backgroundColor: color.hex }}
-                    />
-                  ),
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-[18px]">
-              <div className="flex items-center justify-between leading-[1.2]">
-                <p className="text-xl font-medium text-[#8f8f8f]">
-                  Size: <span className="font-semibold text-[#292929]">{selectedSize}</span>
-                </p>
-                <button type="button" className="text-base font-medium text-[#525252] underline">
-                  View Size Chart
-                </button>
-              </div>
-              <div className="grid grid-cols-4 gap-x-3.5 gap-y-[22px] lg:grid-cols-6">
-                {sizes.map((size) => {
-                  const selected = size === selectedSize;
-                  return (
-                    <button
-                      key={size}
-                      type="button"
-                      aria-pressed={selected}
-                      className={`h-10 rounded-md border text-xl font-semibold leading-[1.2] lg:rounded-lg ${
-                        selected ? 'border-[#333] bg-[#ebebeb] text-[#141414]' : 'border-[#e6e6e6] text-[#525252]'
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                    <div className="grid grid-cols-4 gap-x-3.5 gap-y-[22px] lg:grid-cols-6">
+                      {option.values.map((value) => (
+                        <button
+                          key={value.id}
+                          type="button"
+                          aria-pressed={value.name === selected}
+                          className="h-10 rounded-md border border-[#e6e6e6] text-xl font-semibold leading-[1.2] text-[#525252] aria-pressed:border-[#333] aria-pressed:bg-[#ebebeb] aria-pressed:text-[#141414] lg:rounded-lg"
+                        >
+                          {value.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 

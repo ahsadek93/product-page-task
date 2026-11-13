@@ -1,28 +1,17 @@
 import { useState, type MouseEvent } from 'react';
-import mainImage from './assets/image-main.png';
-import thumb1 from './assets/thumb-1.png';
-import thumb2 from './assets/thumb-2.png';
-import thumb3 from './assets/thumb-3.png';
-import thumb4 from './assets/thumb-4.png';
-import thumb5 from './assets/thumb-5.png';
 import shareIcon from './assets/share.svg';
 import heartIcon from './assets/heart.svg';
 import chevronIcon from './assets/chevron.svg';
 
-// ponytail: static Figma content, becomes props when product data is wired in.
-// Figma has a separate main shot for image 1; the rest reuse the thumbnail file.
-const images = [
-  { full: mainImage, thumb: thumb1 },
-  { full: thumb2, thumb: thumb2 },
-  { full: thumb3, thumb: thumb3 },
-  { full: thumb4, thumb: thumb4 },
-  { full: thumb5, thumb: thumb5 },
-];
+type ProductGalleryProps = {
+  images: string[];
+  name: string;
+};
 
 const actionClass = 'rounded-md bg-[#f2f2f2] p-3 lg:rounded-lg lg:p-4';
 
 // Mobile: thumbnails span under image + action column. Desktop: thumbnails sit under the image only.
-function ProductGallery() {
+function ProductGallery({ images, name }: ProductGalleryProps) {
   const [active, setActive] = useState(0);
   const [zoomed, setZoomed] = useState(false);
   const [origin, setOrigin] = useState('50% 50%');
@@ -57,8 +46,8 @@ function ProductGallery() {
         >
           <img
             key={active}
-            src={images[active].full}
-            alt={`Long Sleeve Overshirt, Khaki, image ${active + 1} of ${images.length}`}
+            src={images[active]}
+            alt={`${name}, image ${active + 1} of ${images.length}`}
             fetchPriority="high"
             style={{ transformOrigin: origin }}
             className={`size-full object-cover motion-safe:animate-[fade-in_300ms_ease-out] motion-safe:transition-transform motion-safe:duration-300 [@media(hover:hover)]:group-hover:scale-[2] ${zoomed ? 'scale-[2]' : ''}`}
@@ -86,7 +75,7 @@ function ProductGallery() {
       </div>
 
       <ul className="col-span-2 grid grid-cols-5 gap-[14.7px] lg:col-span-1 lg:gap-5">
-        {images.map(({ thumb }, i) => (
+        {images.map((thumb, i) => (
           <li key={i}>
             <button
               type="button"

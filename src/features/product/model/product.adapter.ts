@@ -8,6 +8,15 @@ function check(ok: boolean, field: string) {
 
 const saleOrNull = (sale: number) => (sale > 0 ? sale : null);
 
+// BE rich-text editor (Quill) pads with empty <p><br></p> blocks and &nbsp; between words.
+// Layout cleanup only — XSS sanitizing happens at render (DOMPurify needs a DOM).
+const tidyHtml = (html: string) =>
+  html
+    .replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/ {2,}/g, ' ')
+    .trim();
+
 export function toProduct(dto: ProductDto): Product {
   check(typeof dto?.id === 'string', 'id');
   check(typeof dto.name === 'string', 'name');
@@ -19,7 +28,7 @@ export function toProduct(dto: ProductDto): Product {
     slug: dto.slug,
     price: dto.price,
     salePrice: saleOrNull(dto.sale_price),
-    descriptionHtml: dto.description ?? '',
+    descriptionHtml: tidyHtml(dto.description ?? ''),
     images: [...new Set([dto.thumb, ...(dto.images ?? [])].filter(Boolean))],
     options: (dto.variations ?? []).map((v) => ({
       name: v.name,
