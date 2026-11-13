@@ -1,6 +1,7 @@
 import { useParams } from 'react-router';
 import Breadcrumb from '@/shared/components/breadcrumb/Breadcrumb';
 import ProductDetails from '@/features/product/components/product-details/ProductDetails';
+import ProductDetailsSkeleton from '@/features/product/components/product-details/ProductDetailsSkeleton';
 import RelatedProducts from '@/features/product/components/related-products/RelatedProducts';
 import ProductReviews from '@/features/product/components/product-reviews/ProductReviews';
 import { useProduct } from '@/features/product/hooks/useProduct';
@@ -8,10 +9,6 @@ import { useProduct } from '@/features/product/hooks/useProduct';
 function ProductPage() {
   const { productSlug = '' } = useParams();
   const { data: product, isPending, isError } = useProduct(productSlug);
-
-  // ponytail: plain text states, skeletons when the design has them
-  if (isPending) return <p className="p-8 text-center">Loading…</p>;
-  if (isError) return <p className="p-8 text-center">Couldn't load this product.</p>;
 
   // ponytail: sample labels until product data is wired in; middle crumbs are text, no category/collection pages exist
   return (
@@ -25,7 +22,13 @@ function ProductPage() {
         ]}
       />
       <div className="mt-6 lg:mt-10">
-        <ProductDetails product={product} />
+        {isPending ? (
+          <ProductDetailsSkeleton />
+        ) : isError ? (
+          <p className="py-16 text-center">Couldn't load this product.</p>
+        ) : (
+          <ProductDetails product={product} />
+        )}
       </div>
       <div className="mt-16 lg:mt-24">
         <RelatedProducts />
