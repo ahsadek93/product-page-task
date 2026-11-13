@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { useCart } from '@/features/cart/hooks/useCart';
+import { useCartCount } from '@/features/cart/hooks/useCartCount';
+import { useCartActions } from '@/features/cart/hooks/useCartActions';
 import logo from './assets/logo.png';
 import searchIcon from './assets/search.svg';
 import cartIcon from './assets/cart.svg';
@@ -13,7 +14,8 @@ import divider from './assets/divider.svg';
 import dividerDesktop from './assets/divider-desktop.svg';
 
 function AppHeader() {
-  const { count, setOpen } = useCart();
+  const count = useCartCount();
+  const { open } = useCartActions();
   const [scrolled, setScrolled] = useState(false);
 
   // Count changes since mount; 0 = no pop on page load with a restored cart.
@@ -62,7 +64,7 @@ function AppHeader() {
             <button type="button" aria-label="Wishlist" className="hidden lg:block">
               <img src={heartIcon} alt="" width={20} height={20} />
             </button>
-            <button type="button" aria-label={`Cart, ${count} items`} onClick={() => setOpen(true)} className="relative">
+            <button type="button" aria-label={`Cart, ${count} items`} onClick={open} className="relative">
               <img src={cartIcon} alt="" width={20} height={20} />
               {count > 0 && (
                 <span
