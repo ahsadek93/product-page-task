@@ -1,9 +1,9 @@
 import { useParams } from 'react-router';
-import Breadcrumb from '../../../../../shared/components/breadcrumb/Breadcrumb';
-import ProductDetails from '../../../../../features/product/components/product-details/ProductDetails';
-import RelatedProducts from '../../../../../features/product/components/related-products/RelatedProducts';
-import ProductReviews from '../../../../../features/product/components/product-reviews/ProductReviews';
-import { useProduct } from '../../../../../features/product/hooks/useProduct';
+import Breadcrumb from '@/shared/components/breadcrumb/Breadcrumb';
+import ProductDetails from '@/features/product/components/product-details/ProductDetails';
+import RelatedProducts from '@/features/product/components/related-products/RelatedProducts';
+import ProductReviews from '@/features/product/components/product-reviews/ProductReviews';
+import { useProduct } from '@/features/product/hooks/useProduct';
 
 function ProductPage() {
   const { productSlug = '' } = useParams();

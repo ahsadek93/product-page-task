@@ -1,5 +1,5 @@
-import { api } from '../../../shared/api/api';
-import type { ProductDto } from '../types/product.dto';
+import { api } from '@/shared/api/api';
+import type { ProductDto } from '@/features/product/types/product.dto';
 import { toProduct } from './product.adapter';
 
 const STORE_SLUG = 'clear-theme';

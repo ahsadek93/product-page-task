@@ -1,5 +1,5 @@
-import type { ProductDto } from '../types/product.dto';
-import type { Product } from '../types/product';
+import type { ProductDto } from '@/features/product/types/product.dto';
+import type { Product } from '@/features/product/types/product';
 
 // Trust boundary: fail loudly on fields the page can't render without, instead of showing undefined/NaN.
 function check(ok: boolean, field: string) {

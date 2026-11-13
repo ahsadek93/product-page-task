@@ -2,7 +2,7 @@
 // Run: node src/features/product/model/product.adapter.test.ts
 // Each block tests one mapping rule with a tiny DTO. Shape correctness is tsc's job, not this file's.
 import assert from 'node:assert/strict';
-import type { ProductDto } from '../types/product.dto';
+import type { ProductDto } from '@/features/product/types/product.dto';
 import { toProduct } from './product.adapter.ts';
 
 const dto = (over: Partial<ProductDto> = {}) =>

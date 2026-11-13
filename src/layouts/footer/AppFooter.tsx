@@ -1,5 +1,5 @@
-import logo from '../header/assets/logo.png';
-import divider from '../header/assets/divider.svg';
+import logo from '@/layouts/header/assets/logo.png';
+import divider from '@/layouts/header/assets/divider.svg';
 import facebookIcon from './assets/facebook.svg';
 import instagramIcon from './assets/instagram.svg';
 import twitterIcon from './assets/twitter.svg';
