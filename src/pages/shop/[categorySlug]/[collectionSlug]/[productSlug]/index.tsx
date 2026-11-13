@@ -2,7 +2,7 @@ import { useParams } from 'react-router';
 import Breadcrumb from '@/shared/components/breadcrumb/Breadcrumb';
 import ProductDetails from '@/features/product/components/product-details/ProductDetails';
 import ProductDetailsSkeleton from '@/features/product/components/product-details/ProductDetailsSkeleton';
-import RelatedProducts from '@/features/product/components/related-products/RelatedProducts';
+import ProductGrid from '@/features/product/components/product-grid/ProductGrid';
 import ProductReviews from '@/features/product/components/product-reviews/ProductReviews';
 import { useProduct } from '@/features/product/hooks/useProduct';
 import { useProductBreadcrumb } from '@/features/product/hooks/useProductBreadcrumb';
@@ -39,13 +39,13 @@ function ProductPage() {
         )}
       </div>
       <div className="mt-16 lg:mt-24">
-        <RelatedProducts />
+        <ProductGrid title="Related Product" />
       </div>
       <div className="mt-14 lg:mt-20">
         <ProductReviews />
       </div>
       <div className="mt-14 lg:mt-20">
-        <RelatedProducts />
+        <ProductGrid title="Popular this week" />
       </div>
     </div>
   );
