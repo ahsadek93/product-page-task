@@ -2,6 +2,7 @@ import { Outlet } from 'react-router';
 import AnnouncementBar from './announcement-bar/AnnouncementBar';
 import AppHeader from './header/AppHeader';
 import AppFooter from './footer/AppFooter';
+import CartDrawer from '@/features/cart/components/cart-drawer/CartDrawer';
 
 function DefaultLayout() {
   return (
@@ -12,6 +13,7 @@ function DefaultLayout() {
         <Outlet />
       </main>
       <AppFooter />
+      <CartDrawer />
     </div>
   );
 }

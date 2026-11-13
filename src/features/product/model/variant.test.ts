@@ -2,7 +2,7 @@
 // Run: node src/features/product/model/variant.test.ts
 import assert from 'node:assert/strict';
 import type { Product, ProductVariant } from '@/features/product/types/product';
-import { defaultSelection, findVariant, isAvailable, nextSelection, priceOf, stockOf } from './variant.ts';
+import { defaultSelection, findVariant, isAvailable, nextSelection, priceOf, stockOf, toCartItem } from './variant.ts';
 
 const v = (id: string, options: Record<string, string>, price = 100, salePrice: number | null = null): ProductVariant =>
   ({ id, price, salePrice, quantity: 1, options });
@@ -53,5 +53,17 @@ assert.deepEqual(stockOf(tracked(), { ...v('x', {}), quantity: 0 }), { quantity:
 assert.deepEqual(stockOf(tracked({ blockOrdersWhenOutOfStock: false }), { ...v('x', {}), quantity: 0 }), { quantity: 0, canOrder: true });
 assert.deepEqual(stockOf(tracked({ variants: [] })), { quantity: 7, canOrder: true }); // no variants → product qty
 assert.deepEqual(stockOf(tracked()), { quantity: 0, canOrder: false }); // has variants but none matched
+
+// toCartItem: charged price, selected swatch image, product id when no variant
+const shoe = product({
+  id: 'p', name: 'Shoe', images: ['main.jpg'],
+  options: [{ name: 'color', type: 'image', values: [{ id: '1', name: 'red', image: 'red.jpg' }] }],
+});
+assert.deepEqual(toCartItem(shoe, { color: 'red', size: '40' }, variants[1]), {
+  variantId: 'b', name: 'Shoe', image: 'red.jpg', price: 100, options: { color: 'red', size: '40' }, quantity: 1, maxQuantity: null,
+});
+assert.equal(toCartItem({ ...shoe, trackStock: true, blockOrdersWhenOutOfStock: true }, {}, variants[1]).maxQuantity, 1); // capped at variant stock
+assert.equal(toCartItem(product({ id: 'p', images: ['main.jpg'], options: [], variants: [] }), {}, undefined).variantId, 'p');
+assert.equal(toCartItem(product({ id: 'p', images: ['main.jpg'], options: [], variants: [] }), {}, undefined).image, 'main.jpg');
 
 console.log('variant ok');

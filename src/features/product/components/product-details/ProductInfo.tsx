@@ -5,7 +5,7 @@ import SwapText from '@/shared/components/swap-text/SwapText';
 import ProductDescription from './ProductDescription';
 import dotIcon from './assets/dot.svg';
 import starIcon from './assets/star.svg';
-import dashedLine from './assets/dashed-line.svg';
+import dashedLine from '@/shared/assets/dashed-line.svg';
 
 type ProductInfoProps = {
   product: Product;
@@ -15,7 +15,7 @@ type ProductInfoProps = {
 // ponytail: fixed low-stock threshold; make it a store setting if merchants need to tune it
 const LOW_STOCK = 5;
 
-function ProductInfo({ product, selection: { selection, select, isAvailable, variant, stock, price, salePrice } }: ProductInfoProps) {
+function ProductInfo({ product, selection: { selection, select, isAvailable, variant, stock, price, salePrice, addToCart } }: ProductInfoProps) {
   return (
     <div className="flex flex-col gap-[38px] font-clash lg:w-[520px] lg:shrink-0">
       <div className="flex flex-col gap-12 lg:gap-14">
@@ -146,6 +146,7 @@ function ProductInfo({ product, selection: { selection, select, isAvailable, var
           <button
             type="button"
             disabled={(product.variants.length > 0 && !variant) || stock?.canOrder === false}
+            onClick={addToCart}
             className="w-[296px] rounded-md bg-[#141414] py-[17px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40 lg:rounded-lg"
           >
             Add To Cart

@@ -1,4 +1,5 @@
 import type { Product, ProductVariant } from '@/features/product/types/product';
+import type { CartItem } from '@/features/cart/types/cart';
 
 export type Selection = Record<string, string>; // { color: 'brown', size: '40' }
 
@@ -42,4 +43,20 @@ export const priceOf = (product: Product, variant?: ProductVariant) => {
   const price = variant?.price || product.price;
   const salePrice = variant?.salePrice ?? product.salePrice;
   return { price, salePrice: salePrice !== null && salePrice < price ? salePrice : null };
+};
+
+// Snapshot for the cart: the selected color's swatch beats the generic first image.
+export const toCartItem = (product: Product, selection: Selection, variant: ProductVariant | undefined, quantity = 1): CartItem => {
+  const { price, salePrice } = priceOf(product, variant);
+  const imageOption = product.options.find((o) => o.type === 'image');
+  const swatch = imageOption?.values.find((v) => v.name === selection[imageOption.name])?.image;
+  return {
+    variantId: variant?.id ?? product.id,
+    name: product.name,
+    image: swatch ?? product.images[0] ?? '',
+    price: salePrice ?? price,
+    options: variant?.options ?? selection,
+    quantity,
+    maxQuantity: product.blockOrdersWhenOutOfStock ? (stockOf(product, variant)?.quantity ?? null) : null,
+  };
 };
