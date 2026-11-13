@@ -13,7 +13,7 @@ const stepper =
 function CartLine({ item, onQuantity, onRemove }: CartLineProps) {
   return (
     <li className="flex gap-4 py-6">
-      <img src={item.image} alt="" className="h-[120px] w-24 shrink-0 rounded-lg bg-[#f5f5f5] object-cover" />
+      <img src={item.image} alt="" className="size-24 shrink-0 rounded-lg bg-[#f2f2f2] object-cover" />
 
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-3 leading-[1.2]">
         <div className="flex flex-col gap-1.5">
