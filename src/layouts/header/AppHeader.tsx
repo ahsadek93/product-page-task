@@ -50,7 +50,7 @@ function AppHeader() {
             />
           </Link>
           <nav className="flex items-center gap-5 lg:gap-8">
-            <button type="button" aria-label="Search">
+            <button type="button" aria-label="Search" className="-m-2.5 p-2.5">
               <img src={searchIcon} alt="" width={20} height={20} />
             </button>
             <button type="button" className="hidden items-center gap-1 text-base leading-[1.6] lg:flex">
@@ -61,16 +61,16 @@ function AppHeader() {
               <img src={userIcon} alt="" width={20} height={20} />
               Sign in
             </button>
-            <button type="button" aria-label="Wishlist" className="hidden lg:block">
+            <button type="button" aria-label="Wishlist" className="-m-2.5 hidden p-2.5 lg:block">
               <img src={heartIcon} alt="" width={20} height={20} />
             </button>
-            <button type="button" aria-label={`Cart, ${count} items`} onClick={open} className="relative">
+            <button type="button" aria-label={`Cart, ${count} items`} onClick={open} className="relative -m-2.5 p-2.5">
               <img src={cartIcon} alt="" width={20} height={20} />
               {count > 0 && (
                 <span
                   key={bumps} // remount restarts the animation on every change
                   aria-hidden="true"
-                  className={`absolute -top-1 left-2.5 size-[13px] ${bumps ? 'motion-safe:animate-[pop_300ms_ease-out]' : ''}`}
+                  className={`absolute left-5 top-1.5 size-[13px] ${bumps ? 'motion-safe:animate-[pop_300ms_ease-out]' : ''}`}
                 >
                   <img src={badge} alt="" width={13} height={13} />
                   <span className="absolute inset-0 flex items-center justify-center text-[8px] text-white">
@@ -79,7 +79,7 @@ function AppHeader() {
                 </span>
               )}
             </button>
-            <button type="button" aria-label="Menu" className="lg:hidden">
+            <button type="button" aria-label="Menu" className="-m-2.5 p-2.5 lg:hidden">
               <img src={menuIcon} alt="" width={20} height={20} />
             </button>
           </nav>
