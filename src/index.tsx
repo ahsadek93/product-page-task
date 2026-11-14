@@ -4,8 +4,9 @@ import './index.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import ErrorBoundary from '@/shared/components/error-boundary/ErrorBoundary';
+import { shouldRetry } from '@/shared/api/api';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: shouldRetry } } });
 
 // Replaces the whole tree, router included, so it uses a plain <a>: a full reload is the recovery.
 const crashFallback = (
