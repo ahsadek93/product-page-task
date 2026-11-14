@@ -15,7 +15,7 @@ type CartState = {
   setOpen: (open: boolean) => void;
 };
 
-// ponytail: stock cap is the snapshot from add time; re-check against the API at checkout
+// notes: stock cap is the snapshot from add time; re-check against the API at checkout
 const clamp = (item: CartItem, quantity: number) => Math.min(quantity, item.maxQuantity ?? Infinity);
 
 // localStorage is outside our control: a malformed line (e.g. no `options`) would crash the header or CartLine.

@@ -11,7 +11,7 @@ import arrowIcon from './assets/arrow-right.svg';
 import separator from './assets/line-review.svg';
 import separatorMobile from './assets/line-review-m.svg';
 
-// ponytail: static Figma content and fixed selections, become props when reviews are fetched
+// notes: static Figma content and fixed selections, become props when reviews are fetched
 const reviews: Review[] = [
   {
     title: 'This is amazing product I have.',

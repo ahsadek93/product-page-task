@@ -5,7 +5,7 @@ import ringArc from './assets/ring-arc.svg';
 import ringTrackMobile from './assets/ring-track-m.svg';
 import ringArcMobile from './assets/ring-arc-m.svg';
 
-// ponytail: static Figma content, becomes props when reviews are fetched
+// notes: static Figma content, becomes props when reviews are fetched
 const breakdown = [
   { stars: '5.0', count: 2823, fill: '84%' },
   { stars: '4.0', count: 38, fill: '47.5%' },

@@ -5,7 +5,7 @@ import product3 from './assets/product-3.webp';
 import product4 from './assets/product-4.webp';
 import product5 from './assets/product-5.webp';
 
-// ponytail: static Figma content, becomes props when related products are fetched
+// notes: static Figma content, becomes props when related products are fetched
 const products: ProductCardItem[] = [
   {
     image: product1,

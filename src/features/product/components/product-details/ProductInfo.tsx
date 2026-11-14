@@ -14,7 +14,7 @@ type ProductInfoProps = {
   cart: AddToCart;
 };
 
-// ponytail: fixed low-stock threshold; make it a store setting if merchants need to tune it
+// notes: fixed low-stock threshold; make it a store setting if merchants need to tune it
 const LOW_STOCK = 5;
 
 function ProductInfo({
@@ -35,7 +35,7 @@ function ProductInfo({
             <div className="flex flex-col gap-3.5 lg:gap-5">
               <div className="flex flex-col gap-2 leading-[1.2] lg:gap-3">
                 {/* Figma shows a brand here; the API has none, so the first category fills the slot.
-                    ponytail: sold count and rating below are static Figma values — the API has no sales or review data */}
+                    notes: sold count and rating below are static Figma values — the API has no sales or review data */}
                 {categories[0] && (
                   <p className="text-[13px] font-medium capitalize tracking-[0.01em] text-ink-300 lg:text-base">
                     {categories[0]}

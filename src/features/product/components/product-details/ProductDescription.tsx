@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DOMPurify from 'dompurify';
 import SwapText from '@/shared/components/swap-text/SwapText';
 
-// ponytail: heights measured on mount/content change only; add a ResizeObserver if width changes must re-check them
+// notes: heights measured on mount/content change only; add a ResizeObserver if width changes must re-check them
 function ProductDescription({ html }: { html: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
