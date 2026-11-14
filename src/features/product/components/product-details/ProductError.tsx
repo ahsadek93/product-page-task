@@ -1,9 +1,7 @@
 import { Link } from 'react-router';
 
 // Not in Figma: styled from the page's own CTA buttons and type scale.
-type Props = { onRetry: () => void; retrying: boolean };
-
-function ProductError({ onRetry, retrying }: Props) {
+function ProductError() {
   return (
     <div role="alert" className="flex flex-col items-center gap-8 py-16 text-center font-clash leading-[1.2] lg:py-24">
       <span className="flex size-16 items-center justify-center rounded-full bg-surface" aria-hidden="true">
@@ -27,14 +25,9 @@ function ProductError({ onRetry, retrying }: Props) {
         <p className="text-base text-ink-500 lg:text-lg">We couldn't load this product. It may have been removed.</p>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4">
-        <button type="button" onClick={onRetry} disabled={retrying} className="btn-outline px-8 text-lg">
-          {retrying ? 'Retrying…' : 'Try again'}
-        </button>
-        <Link to="/" className="btn-primary px-8 text-lg">
-          Back to homepage
-        </Link>
-      </div>
+      <Link to="/" className="btn-primary px-8 text-lg">
+        Back to homepage
+      </Link>
     </div>
   );
 }
