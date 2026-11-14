@@ -75,7 +75,7 @@ Rules that keep it clean:
 - **Components never import a store or the API.** They get data from hooks.
 - **Business logic lives in `model/`** as plain functions, so it is unit-tested without React.
 - **Features talk through hooks and types, not internals.** Product adds to the cart via `useCartActions`; the cart never imports product (one-way dependency, no cycle).
-- **No barrels, no DI, no classes.** The one exception is `ErrorBoundary`: React has no hook for catching render errors. Tests sit next to the code they test.
+- **No barrels, no DI, no classes.** Two exceptions: `ErrorBoundary`, because React has no hook for catching render errors, and `ApiError`, so callers can narrow with `instanceof`. Tests sit next to the code they test.
 
 Styling is Tailwind. Figma's colours are named theme tokens in `tailwind.config.js` (`ink-900` … `ink-200`, `line`, `surface`, `review-*`, `success` / `warning` / `danger`); colours used only once or twice stay as arbitrary values. The two Figma button looks are shared as `.btn-primary` and `.btn-outline` in `src/index.css`.
 
@@ -91,7 +91,7 @@ Props are typed in each file; these are the ones worth knowing.
 | `ProductOptions`         | `options`, `selection`, `select`, `unavailableReason` | One labelled group per option. Disabled options explain why on hover and to screen readers ("Sold out" / "Not available").                                     |
 | `ProductDescription`     | `html: string`                                        | Sanitised (DOMPurify) merchant HTML, collapsed to Figma's 4 lines on desktop and 5 on mobile, with an inline See More on the last line and an animated expand. |
 | `ProductDetailsSkeleton` | –                                                     | Loading placeholder with the same layout, so nothing jumps when data arrives.                                                                                  |
-| `ProductError`           | `onRetry()`, `retrying: boolean`                      | Error state with a Try again button (shows "Retrying…" while busy) and a link back home.                                                                       |
+| `ProductError`           | –                                                     | Error state with a link back home.                                                                                                                             |
 | `ProductGrid`            | `title: string`                                       | Grid of `ProductCard`s (2 / 3 / 5 columns). Used twice: "Related Product" and "Popular this week".                                                             |
 | `ProductReviews`         | –                                                     | Reviews section (`ReviewSummary`, `ReviewFilters`, `ReviewItem`).                                                                                              |
 | `CartDrawer`             | –                                                     | Slide-over cart (Headless UI `Dialog`): lines, quantity steppers, subtotal. Opened from the header or "View Cart".                                             |
@@ -146,7 +146,7 @@ Each kind of state lives in the tool built for it:
 ## API integration
 
 - **Endpoint:** `GET /products/slug/{store}/{slug}?join=reviews` on `https://api.easy-orders.net/api/v1` (store `clear-theme`).
-- **Fetching:** `shared/api/api.ts` is a small `fetch` wrapper that throws on non-2xx. `product/model/api.ts` calls it and `useProduct` wraps it in `useQuery` (key `['product', slug]`).
+- **Fetching:** `shared/api/api.ts` is a small `fetch` wrapper. `product/model/api.ts` calls it and `useProduct` wraps it in `useQuery` (key `['product', slug]`).
 - **Adapter** (`product.adapter.ts`) is the trust boundary between the API and the app:
   - throws if `id`, `name` or `price` are missing or the wrong type, instead of rendering `undefined`/`NaN`;
   - `sale_price: 0` → `null` (no sale), `null` lists → `[]`;
@@ -154,8 +154,16 @@ Each kind of state lives in the tool built for it:
   - variant props array → `{ color: 'brown', size: '40' }`;
   - strips the rich-text editor's empty paragraphs and `&nbsp;` from the description (XSS sanitising happens at render with DOMPurify).
 - **Pricing and stock rules** (`variant.ts`): a variant's price and sale override the product's when set; a sale only counts if it's below the price; stock is ignored when the store doesn't track it, and only blocks ordering when the store says so.
-- **Cancelling:** `useProduct` passes React Query's `AbortSignal` to `fetch`, so a request for a page the user already left is aborted.
-- **Loading and errors:** a layout-matched skeleton (breadcrumb included) while loading; `ProductError` on failure, after React Query's default 3 retries. Its Try again button refetches; the error screen stays up (with "Retrying…") until the refetch succeeds or fails again.
+- **Errors:** every API failure becomes one `ApiError` with a `kind`:
+  - `network`: no response came back (offline, DNS, CORS);
+  - `http`: the server answered non-2xx; carries `status` and the server's `message` (e.g. a missing product is `400 "record not found"`, not a 404);
+  - `parse`: a 2xx whose body isn't JSON.
+
+  Aborts are rethrown untouched so React Query can cancel quietly. Not every error is an `ApiError` (the adapter throws plain `Error`s), so React Query's error type isn't narrowed globally.
+
+- **Retries:** only `network` errors are retried (up to 3 times, set once on the `QueryClient`). A server reply, or an adapter error, won't change on retry, so it fails straight away.
+- **Cancelling:** `useProduct` passes React Query's `AbortSignal` to `fetch`, so a request for a page the user already left is aborted. In dev, StrictMode's double mount makes this show as one cancelled request followed by a successful one; a production build sends one.
+- **Loading and errors:** a layout-matched skeleton (breadcrumb included) while loading; `ProductError` on failure. The error screen stays up during a background refetch (e.g. on window focus) instead of flashing the skeleton.
 
 ## Deployment
 
@@ -183,14 +191,15 @@ No environment variables or server are needed.
 npm test
 ```
 
-61 unit tests on Node's built-in runner (`node:test`), with no extra dependencies:
+68 unit tests on Node's built-in runner (`node:test`), with no extra dependencies:
 
 - `cart.store.test.ts`: every action, stock caps (including how many an add actually added), merging, persistence (only `items` saved, restored on rehydrate, malformed lines dropped, reload on another tab's change), count/subtotal.
 - `variant.test.ts`: variant matching, default selection, pricing, unavailable options (missing vs sold out), selection correction, stock, cart snapshot.
 - `product.adapter.test.ts`: each mapping rule and the trust-boundary errors.
 - `breadcrumb.test.ts`: category name lookup and slug humanising.
+- `api.test.ts`: each `ApiError` kind, the server-message fallback, abort pass-through, and the retry rule (`fetch` stubbed, no network).
 
-`npm run test:coverage` adds Node's built-in coverage report: **100 % lines, 94.63 % branches, 100 % functions** across the four tested files.
+`npm run test:coverage` adds Node's built-in coverage report: **100 % lines, 94.12 % branches, 100 % functions** across the five tested files.
 
 The scope is deliberately the **model and store layer**, where the business rules live. Components are thin views over these, so component and E2E tests were left out to keep the suite fast and dependency-free.
 
